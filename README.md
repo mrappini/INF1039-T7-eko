@@ -1,1 +1,1 @@
-# INF1039-eko-example
+# INF1039-eko

@@ -1,4 +1,4 @@
-# eko: deixe sua voz ekoar!
+# 🎵 eko: deixe sua voz ekoar!
 
 Projeto desenvolvido para a disciplina INF1039 (Projetos: Aplicações Interativas) da PUC-Rio, cursada em 2025.2.
 O Eko é uma plataforma digital que permite aos usuários avaliar, descobrir e compartilhar músicas e álbuns, criando uma comunidade onde cada voz pode ecoar — unindo tecnologia, design e paixão por música.

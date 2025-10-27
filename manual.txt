@@ -1,0 +1,3 @@
+arquivos CSS vao pra pasta "static"
+
+arquivos HTML vao pra pasta "templates"

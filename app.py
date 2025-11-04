@@ -8,8 +8,14 @@ def homepage():
 
 @app.route('/avaliacao')
 def avaliacao():
-
-    return render_template('avaliacao.html')
+    album = {
+    "titulo": "Currents",
+    "artista": "Tame Impala",
+    "ano": 2015,
+    "genero": "Pop/Indie",
+    "nota": 9.2
+}
+    return render_template('avaliacao.html', album=album)
 
 @app.route('/cadastro')
 def cadastro():

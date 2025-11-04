@@ -10,5 +10,9 @@ def homepage():
 def page2():
     return render_template('page2.html')
 
+@app.route('/avaliacao')
+def avaliacao():
+    return render_template('avaliacao.html')
+
 if __name__ == '__main__':
     app.run(debug=True)

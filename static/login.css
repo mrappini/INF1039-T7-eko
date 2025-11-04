@@ -1,0 +1,16 @@
+
+.center-screen {
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap:10px;
+  min-height: 100vh;
+}
+.rounded {
+  border-radius: 9999px;
+  padding: 10px 18px; 
+  border: 1px solid #ccc;
+}

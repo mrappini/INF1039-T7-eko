@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <meta charset = "utf-8">
+    <meta charset = "viewport"  content=""width=device-width>
+    <title>
+        Crie Sua Conta
+    </title>
+    
+    <style>
+        body {
+      background-color: #1F1F23;
+      color: #EDEDED;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      background-color: #2A2A30;
+      border: none;
+      border-radius: 1rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      padding: 2rem;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .form-label {
+      color: #FF6E1A;
+    }
+
+    .btn-primary {
+      background-color: #FF6E1A;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #E65C00;
+    }
+
+    h1 {
+      color: #EDEDED;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    </style>
+    <link href="style.css" rel ="stylesheet" type ="text/css"/>
+
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="card">
+                    <h1>Crie Sua Conta</h1>
+                        
+                            
+                                <form>
+                                <div class="mb-3">
+                                <label class="form-label" for="usuario" >Usuario: </label>
+                                <input class="form-control" type="text" id="usuario" name="usuario"><br>
+                                </div>
+                                <div class="mb-3">
+                                <label class="form-label" for="email" >Email: </label>
+                                <input class="form-control" type="text" id="email" name="email"><br>
+                                </div>
+                                <div class="mb-3">
+                                <label class="form-label" for="senha" >Senha: </label>
+                                <input class="form-control" type="text" id="senha" name="senha"><br>
+                                </div>
+                                <div class="mb-3">
+                                <label class="form-label" for="confirmar" >Confirmar: </label>
+                                <input class="form-control" type="text" id="confirmar" name="confirmar"><br>
+                                </div>
+                                <div class="mb-3">
+                                <label class="form-label" for="celular" >Celular: </label>
+                                <input class="form-control" type="text" id="celular" name="celular"><br>
+                                </div>
+                                <div class="d-grid">
+                                <button class="btn btn-primary" type="submit" value="Submit">Criar Conta</button>
+                                </div>
+                                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,9 +1,50 @@
+/* Estilos GERAIS que você quer em TODAS as páginas */
 body {
   color: #ffffff;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  /* REMOVA as propriedades de background daqui */
+}
 
+footer {
+  margin-top: auto;
+}
+
+/* coisas gerais (vale pra tudo)*/
+
+.bg-eko-dark {
+  background-color: #2b2b31;
+}
+.border-eko-header {
+  border-bottom: 2px solid #ff6e1a;
+}
+.border-eko-footer {
+  border-top: 1px solid #3a3a3f;
+}
+.btn-eko {
+  background-color: #ff6e1a;
+  color: #fff;
+  border: none;
+  font-weight: bold;
+}
+.btn-eko:hover {
+  background-color: #e66012;
+  color: #fff;
+}
+.text-eko-lead {
+  color: #d0d0d0;
+}
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link:focus {
+  color: #ff6e1a;
+}
+
+
+
+/*======================coisas da homepage===============================*/
+
+.body-homepage {
   background-image: url("bgekogrande.jpg");
   background-size: cover;
   background-position: center;
@@ -11,8 +52,7 @@ body {
   position: relative;
 }
 
-
-body::before {
+.body-homepage::before {
   content: '';
   position: absolute;
   top: 0;
@@ -24,50 +64,9 @@ body::before {
   z-index: -1; 
 }
 
-
-header,
-main,
-footer {
+.body-homepage header,
+.body-homepage main,
+.body-homepage footer {
   position: relative;
   z-index: 1;
 }
-
-footer {
-  margin-top: auto;
-}
-
-
-.bg-eko-dark {
-
-  background-color: #2b2b31;
-}
-
-.border-eko-header {
-  border-bottom: 2px solid #ff6e1a;
-}
-
-.border-eko-footer {
-  border-top: 1px solid #3a3a3f;
-}
-
-.btn-eko {
-  background-color: #ff6e1a;
-  color: #fff;
-  border: none;
-  font-weight: bold;
-}
-
-.btn-eko:hover {
-  background-color: #e66012;
-  color: #fff;
-}
-
-.text-eko-lead {
-  color: #d0d0d0;
-}
-
-.navbar-dark .navbar-nav .nav-link:hover,
-.navbar-dark .navbar-nav .nav-link:focus {
-  color: #ff6e1a;
-}
-

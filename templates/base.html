@@ -15,7 +15,7 @@
       href="{{ url_for('static', filename='homepage.css') }}"
     />
   </head>
-  <body>
+  <body {% block body_class %}{% endblock %}>
     <header
       class="navbar navbar-expand-lg navbar-dark bg-eko-dark border-eko-header"
     >
@@ -46,10 +46,14 @@
               <a class="nav-link" href="{{ url_for('avaliacao') }}">minhas avaliações</a>
             </li>
           </ul>
-          <form class="d-flex">
-            <button class="btn btn-eko" type="button">
-              entrar / cadastrar
-            </button>
+          <form class="d-flex gap-2">
+            <a href="{{ url_for('login') }}" class="btn btn-eko">
+              entrar
+            </a>
+
+            <a href="{{ url_for('cadastro') }}" class="btn btn-eko">
+              cadastrar
+            </a>
           </form>
         </div>
       </div>

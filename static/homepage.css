@@ -1,17 +1,17 @@
-/* Estilos GERAIS que você quer em TODAS as páginas */
+/* estilo geral das páginas */
 body {
   color: #ffffff;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  /* REMOVA as propriedades de background daqui */
+  font-family: 'Prompt', sans-serif;
 }
 
 footer {
   margin-top: auto;
 }
 
-/* coisas gerais (vale pra tudo)*/
+/*======================== coisas gerais==================================*/
 
 .bg-eko-dark {
   background-color: #2b2b31;
@@ -27,6 +27,10 @@ footer {
   color: #fff;
   border: none;
   font-weight: bold;
+}
+
+.text-eko-orange {
+  color: #ff6e1a;
 }
 .btn-eko:hover {
   background-color: #e66012;
@@ -44,29 +48,38 @@ footer {
 
 /*======================coisas da homepage===============================*/
 
-.body-homepage {
-  background-image: url("bgekogrande.jpg");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  position: relative;
-}
-
-.body-homepage::before {
-  content: '';
+.background-video-homepage {
   position: absolute;
-  top: 0;
-  left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(31, 31, 35, 0.7); 
+  z-index: -1;
+  width: 100%;
   backdrop-filter: blur(5px);
-  z-index: -1; 
+
 }
 
-.body-homepage header,
-.body-homepage main,
-.body-homepage footer {
-  position: relative;
+@media (min-aspect-ratio: 16/9) {
+  .background-video-homepage video {
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media (max-aspect-ratio: 16/9) {
+  .background-video-homepage video {
+    width: auto;
+    height: 100%;
+  }
+}
+
+
+.body-homepage main {
+  flex-grow: 1; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;    
+  text-align: center; 
+  position: relative; 
   z-index: 1;
 }

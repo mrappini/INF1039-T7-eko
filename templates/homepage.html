@@ -5,8 +5,13 @@
 {% block body_class %}class="body-homepage"{% endblock %}
 
 {% block content %}
+<div class="background-video-homepage">
+  <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
+    <source src="{{ url_for('static', filename='bgvideo.mp4') }}" type="video/mp4">
+  </video>
+</div>
 <main class="container text-center my-5 p-4">
-  <h2 class="display-4 fw-bold">deixe sua voz ekoar.</h2>
+  <h2 class="display-4 fw-bold">deixe sua voz <span class="text-eko-orange">eko</span>ar.</h2>
 
   <p class="lead text-eko-lead">
     descubra, avalie e compartilhe as músicas que te marcam.

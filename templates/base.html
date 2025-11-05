@@ -18,7 +18,9 @@
       href="{{ url_for('static', filename='homepage.css') }}"
     />
   </head>
-  <body {% block body_class %}{% endblock %}>
+  <body {% block body_class %}{% endblock %}> 
+
+    {% block navbar %}
     <header
       class="navbar navbar-expand-lg navbar-dark bg-eko-dark border-eko-header"
     >
@@ -61,16 +63,18 @@
         </div>
       </div>
     </header>
-
+    {% endblock navbar %}
     {% block content %}
     {% endblock %}
 
+
+    {% block footer %}
     <footer
       class="text-center text-white-50 p-3 bg-eko-dark border-eko-footer"
     >
       <p class="mb-0">© 2025 eko — trabalho de INF1039 — PUC-Rio.</p>
     </footer>
-
+    {% endblock footer %}
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

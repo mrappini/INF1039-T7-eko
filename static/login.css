@@ -9,8 +9,9 @@
   gap:10px;
   min-height: 100vh;
 }
-.rounded {
+.rounded-button {
   border-radius: 10px;
   padding: 10px 18px; 
   border: 1px solid #cccccc00;
+  text-decoration: none;
 }

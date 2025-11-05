@@ -9,13 +9,17 @@
 <body style="background-color: #1f1f23;">
     
     <div class='center-screen'>  
+        <a href="{{ url_for('homepage') }}">
         <img src="{{ url_for('static',filename='eko_branco_transparente.png') }}">
+        </a>
         <h2 style="color: white;">Pronto para retornar a sua jornada musical?</h2>
-         <input type="text" class="rounded" placeholder="Usuário ou e-mail" > 
-        <input type="password" class="rounded" placeholder="Senha" >
-        <a href="https://google.com" style="font-size: 10px;color:white">esqueci meu login</a>
-        <button class="rounded" style="background-color:#ff6e00;color:white">Login</button>
-        <button class="rounded" style="background-color:#ff6e00;color: white;">Cadastrar</button>
+         <input type="text" class="rounded-button" placeholder="Usuário ou e-mail" > 
+        <input type="password" class="rounded-button" placeholder="Senha" >
+        <a href="https://google.com" style="font-size: 90%;color:white">esqueci meu login</a>
+        <button class="rounded-button" id='login-button' style="background-color:#ff6e00;color:white">Login</button>
+        
+        <a class="rounded-button" id='signup-button' href="{{url_for('cadastro')}}" style="background-color:#ff6e00;color: white;">Cadastrar</a>
+    
     </div>
 </body>
 </html>

@@ -19,7 +19,6 @@ def avaliacao():
 
 @app.route('/cadastro')
 def cadastro():
-
     return render_template('cadastro.html')
 
 
@@ -28,7 +27,9 @@ def login():
 
     return render_template('login.html')
 
-
+@app.route('/explorar')
+def explorar():
+    return render_template('busca.html')
 
 
 if __name__ == '__main__':

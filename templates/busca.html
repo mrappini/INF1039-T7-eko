@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busca de Música</title>
+    <style>
+        /* Reset básico e configurações globais */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #1E1E1E; /* Fundo cinza bem escuro */
+            color: #FFFFFF; /* Texto branco */
+            padding: 1.5rem;
+            min-height: 100vh;
+        }
+
+        .search-page-container {
+            width: 100%;
+            max-width: 600px; /* Largura máxima para tablets/desktops */
+            margin: 0 auto;
+        }
+
+        /* Cabeçalho com seta de voltar */
+        header {
+            margin-bottom: 2rem;
+        }
+
+        .back-arrow {
+            font-size: 1.5rem;
+            color: #FFFFFF;
+            text-decoration: none;
+            line-height: 1;
+            display: inline-block;
+        }
+
+        /* Barra de Busca */
+        .search-bar {
+            margin-bottom: 6rem; /* Espaço grande para a área central */
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            background-color: #2F2F2F; /* Cor de fundo da barra de busca */
+            color: #FFFFFF;
+            font-size: 1rem;
+        }
+
+        .search-bar input::placeholder {
+            color: #A0A0A0;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+        }
+
+        /* Mensagem Central (Lupa e Texto) */
+        .search-center-message {
+            text-align: center;
+            margin-bottom: 6rem;
+        }
+
+        .search-icon {
+            font-size: 4rem; /* Lupa grande */
+            color: #555555; /* Cor cinza clara para a lupa */
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .search-center-message p {
+            color: #B0B0B0;
+        }
+
+        .search-center-message .highlight-text {
+            color: #F76B1C; /* Destaque laranja */
+            text-decoration: none;
+        }
+
+        /* Buscas Populares */
+        .popular-searches h2 {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #FFFFFF;
+            margin-bottom: 1rem;
+            text-transform: lowercase; /* Assegurar que seja minúsculo como na imagem */
+        }
+
+        .popular-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .popular-list li {
+            margin-bottom: 0.5rem;
+        }
+
+        .popular-list a {
+            display: block;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            background-color: #2F2F2F; /* Cor de fundo dos itens da lista */
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: background-color 0.2s ease;
+        }
+
+        .popular-list a:hover {
+            background-color: #3A3A3A;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="search-page-container">
+        <header>
+            <a href="{{ url_for('homepage') }}" class="back-arrow">&larr;</a>
+        </header>
+
+        <div class="search-bar">
+            <input type="text" placeholder="Buscar" aria-label="Buscar música, artista ou álbum">
+        </div>
+
+        <div class="search-center-message">
+            <svg class="search-icon" style="color: #555555;" width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <p>qual o ritmo de <a class="highlight-text">hoje?</a></p>
+        </div>
+
+        <div class="popular-searches">
+            <h2>álbuns populares:</h2>
+            
+            <ul class="popular-list">
+                <li>
+                    <a href="#">Back in Black - AC/DC</a>
+                </li>
+                <li>
+                    <a href="#">Short n' Sweet - Sabrina Carpenter </a>
+                </li>
+                <li>
+                    <a href="#">Blonde - Frank Ocean</a>
+                </li>
+                 <li>
+                    <a href="#">Off the Wall - Michael Jackson</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>

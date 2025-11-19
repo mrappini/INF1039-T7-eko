@@ -209,3 +209,55 @@ body {
 .load-more:hover {
     background-color: #555;
 }
+
+.similar-albums h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
+.albums-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+}
+
+.album-card {
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.album-card-cover {
+    position: relative;
+    margin-bottom: 8px;
+}
+
+.album-card-cover img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.album-rating {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background-color: #ff8c00;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.album-card-title {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 3px;
+    color: #ffffff;
+}
+
+.album-card-artist {
+    font-size: 12px;
+    color: #b0b0b0;
+}

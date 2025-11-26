@@ -286,60 +286,57 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="album-cover">
-                <img src="https://upload.wikimedia.org/wikipedia/pt/2/2d/Currents_Tame_Impala.png" alt="Currents Album Cover">
+                <img src="{{ album.images[0].url }}" alt="{{ album.name }}">
             </div>
-            
+
             <div class="rating-box">
                 <div class="user-rating">
-                    <div class="rating-number">9.2</div>
+                    <div class="rating-number">—</div>
                     <div class="rating-label">Avaliação média</div>
-                    <div class="rating-meta">12.847 avaliações • 2.156 reviews</div>
+                    <div class="rating-meta">Avaliações em breve</div>
                 </div>
-                
+
                 <div class="your-rating">
-                    <div class="rating-number">9.5</div>
-                    <div class="rating-label">Sua Avaliação</div>
+                    <div class="rating-number">—</div>
+                    <div class="rating-label">Sua avaliação</div>
                 </div>
             </div>
         </aside>
 
         <!-- Conteúdo -->
-        <main class="main-content">
-            <!-- Informação album -->
+       <main class="main-content">
+            <!-- Informações do álbum -->
             <section class="album-info">
-                <h1 class="album-title">Currents</h1>
-                <div class="album-meta">
-                    <span class="artist">Tame Impala</span>
-                    <span class="year">Ano: 2015</span>
-                    <span class="genre">Gênero: Pop/Indie</span>
-                    <span class="duration">Duração: 51:06</span>
-                    <span class="tracks">Faixas: 13</span>
-                </div>
-                
-                <div class="album-description">
-                    <p>Currents é o terceiro álbum de estúdio da banda de música psicodélica australiana Tame Impala. Lançado em 17 de julho de 2015, o álbum marca uma mudança significativa no som da banda, afastando-se do rock psicodélico tradicional em direção a uma sonoridade mais eletrônica e pop. Kevin Parker produziu o álbum inteiro sozinho, como nos álbuns anteriores. Currents foi aclamado pela crítica e comercialmente bem-sucedido.</p>
-                </div>
-            </section>
+                <h1 class="album-title">{{ album.name }}</h1>
 
+                <div class="album-meta">
+                    <span class="artist">{{ album.artists[0].name }}</span>
+                    <span class="year">Ano: {{ album.release_date[:4] }}</span>
+
+                    {% if album.genres %}
+                        <span class="genre">Gênero: {{ album.genres[0] }}</span>
+                    {% else %}
+                        <span class="genre">Gênero: —</span>
+                    {% endif %}
+
+                    <span class="tracks">Faixas: {{ tracks|length }}</span>
+                </div>
+
+                <div class="album-description">
+                    <p>{{ album.label or "Álbum sem descrição oficial." }}</p>
+                </div>
+            <section>
             <!-- TrackList -->
             <section class="tracklist">
                 <h2>Lista de Faixas</h2>
+
                 <ol class="tracks">
-                    <li>Let It Happen ▶</li>
-                    <li>Nangs ▶</li>
-                    <li>The Moment ▶</li>
-                    <li>Yes I'm Changing ▶</li>
-                    <li>Eventually ▶</li>
-                    <li>Gossip ▶</li>
-                    <li>The Less I Know the Better ▶</li>
-                    <li>Past Life ▶</li>
-                    <li>Disciples ▶</li>
-                    <li>Cause I'm a Man ▶</li>
-                    <li>Reality in Motion ▶</li>
-                    <li>Love/Paranoia ▶</li>
-                    <li>New Person, Same Old Mistakes ▶</li>
+                    {% for t in tracks %}
+                    <li>{{ t.track_number }} — {{ t.name }} ▶</li>
+                    {% endfor %}
                 </ol>
             </section>
+
 
             <!-- Reviews -->
             <section class="reviews">

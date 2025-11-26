@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Busca de Música</title>
     <style>
-        /* Reset básico e configurações globais */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -14,19 +13,18 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #1E1E1E; /* Fundo cinza bem escuro */
-            color: #FFFFFF; /* Texto branco */
+            background-color: #1E1E1E;
+            color: #FFFFFF;
             padding: 1.5rem;
             min-height: 100vh;
         }
 
         .search-page-container {
             width: 100%;
-            max-width: 600px; /* Largura máxima para tablets/desktops */
+            max-width: 600px;
             margin: 0 auto;
         }
 
-        /* Cabeçalho com seta de voltar */
         header {
             margin-bottom: 2rem;
         }
@@ -39,19 +37,33 @@
             display: inline-block;
         }
 
-        /* Barra de Busca */
         .search-bar {
-            margin-bottom: 6rem; /* Espaço grande para a área central */
+            margin-bottom: 2rem;
+        }
+
+        .search-bar form {
+            display: flex;
+            gap: 10px;
         }
 
         .search-bar input {
-            width: 100%;
+            flex: 1;
             padding: 1rem 1.5rem;
             border: none;
             border-radius: 12px;
-            background-color: #2F2F2F; /* Cor de fundo da barra de busca */
+            background-color: #2F2F2F;
             color: #FFFFFF;
             font-size: 1rem;
+        }
+
+        .search-bar button {
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            background-color: #F76B1C;
+            color: #FFFFFF;
+            font-size: 1rem;
+            cursor: pointer;
         }
 
         .search-bar input::placeholder {
@@ -62,15 +74,14 @@
             outline: none;
         }
 
-        /* Mensagem Central (Lupa e Texto) */
         .search-center-message {
             text-align: center;
-            margin-bottom: 6rem;
+            margin-bottom: 2rem;
         }
 
         .search-icon {
-            font-size: 4rem; /* Lupa grande */
-            color: #555555; /* Cor cinza clara para a lupa */
+            font-size: 4rem;
+            color: #555555;
             display: block;
             margin-bottom: 0.5rem;
         }
@@ -80,17 +91,16 @@
         }
 
         .search-center-message .highlight-text {
-            color: #F76B1C; /* Destaque laranja */
+            color: #F76B1C;
             text-decoration: none;
         }
 
-        /* Buscas Populares */
         .popular-searches h2 {
             font-size: 0.9rem;
             font-weight: 500;
             color: #FFFFFF;
             margin-bottom: 1rem;
-            text-transform: lowercase; /* Assegurar que seja minúsculo como na imagem */
+            text-transform: lowercase;
         }
 
         .popular-list {
@@ -106,7 +116,7 @@
             display: block;
             padding: 1rem 1.5rem;
             border-radius: 12px;
-            background-color: #2F2F2F; /* Cor de fundo dos itens da lista */
+            background-color: #2F2F2F;
             color: #FFFFFF;
             text-decoration: none;
             font-size: 1rem;
@@ -116,46 +126,186 @@
         .popular-list a:hover {
             background-color: #3A3A3A;
         }
+
+        .search-results {
+            margin-top: 2rem;
+        }
+
+        .album-result {
+            background-color: #2F2F2F;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .album-result img {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .album-info {
+            flex: 1;
+        }
+
+        .album-info h3 {
+            color: #FFFFFF;
+            margin-bottom: 0.5rem;
+        }
+
+        .album-info p {
+            color: #B0B0B0;
+            margin-bottom: 0.25rem;
+        }
+
+        .spotify-link {
+            color: #1DB954;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .error-message {
+            color: #ff4444;
+            text-align: center;
+            padding: 1rem;
+            background-color: #2F2F2F;
+            border-radius: 12px;
+            margin-top: 1rem;
+        }
     </style>
 </head>
 <body>
 
     <div class="search-page-container">
         <header>
-            <a href="{{ url_for('homepage') }}" class="back-arrow">&larr;</a>
+            <a href="/" class="back-arrow">&larr;</a>
         </header>
 
         <div class="search-bar">
-            <input type="text" placeholder="Buscar" aria-label="Buscar música, artista ou álbum">
+            <form id="buscaForm">
+                <input type="text" id="albumInput" name="album" placeholder="Buscar álbum..." aria-label="Buscar álbum" required>
+                <button type="submit">Buscar</button>
+            </form>
         </div>
 
-        <div class="search-center-message">
-            <svg class="search-icon" style="color: #555555;" width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <div id="resultados" class="search-results"></div>
+
+        <div id="mensagemCentral" class="search-center-message">
+            <svg class="search-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <p>qual o ritmo de <a class="highlight-text">hoje?</a></p>
+            <p>qual o ritmo de <span class="highlight-text">hoje?</span></p>
         </div>
 
-        <div class="popular-searches">
+        <div id="buscasPopulares" class="popular-searches">
             <h2>álbuns populares:</h2>
             
             <ul class="popular-list">
                 <li>
-                    <a href="#">Back in Black - AC/DC</a>
+                    <a href="#" onclick="testeBusca('Back in Black')">Back in Black - AC/DC</a>
                 </li>
                 <li>
-                    <a href="#">Short n' Sweet - Sabrina Carpenter </a>
+                    <a href="#" onclick="testeBusca('Short n Sweet')">Short n' Sweet - Sabrina Carpenter</a>
                 </li>
                 <li>
-                    <a href="#">Blonde - Frank Ocean</a>
+                    <a href="#" onclick="testeBusca('Blonde')">Blonde - Frank Ocean</a>
                 </li>
-                 <li>
-                    <a href="#">Off the Wall - Michael Jackson</a>
+                <li>
+                    <a href="#" onclick="testeBusca('Off the Wall')">Off the Wall - Michael Jackson</a>
                 </li>
             </ul>
         </div>
     </div>
 
+    <script>
+        function testeBusca(album) {
+            console.log('🧪 Executando teste de busca:', album);
+            document.getElementById('albumInput').value = album;
+            document.getElementById('buscaForm').dispatchEvent(new Event('submit'));
+        }
+
+        document.getElementById('buscaForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const albumInput = document.getElementById('albumInput').value;
+            console.log('🔍 Buscando álbum:', albumInput);
+            
+            document.getElementById('resultados').innerHTML = '<p style="text-align: center; color: #B0B0B0;">Buscando...</p>';
+            
+            document.getElementById('mensagemCentral').style.display = 'none';
+            document.getElementById('buscasPopulares').style.display = 'none';
+            
+            const formData = new FormData();
+            formData.append('album', albumInput);
+            
+            fetch('/api/buscar_album', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                console.log('📡 Status da resposta:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('📊 Dados recebidos:', data);
+                mostrarResultados(data);
+            })
+            .catch(error => {
+                console.error('💥 Erro na busca:', error);
+                document.getElementById('resultados').innerHTML = '<p class="error-message">Erro na busca: ' + error + '</p>';
+                
+                document.getElementById('mensagemCentral').style.display = 'block';
+                document.getElementById('buscasPopulares').style.display = 'block';
+            });
+        });
+
+        function mostrarResultados(data) {
+            const resultadosDiv = document.getElementById('resultados');
+            
+            if (data.erro) {
+                resultadosDiv.innerHTML = '<p class="error-message">Erro: ' + data.erro + '</p>';
+                document.getElementById('mensagemCentral').style.display = 'block';
+                document.getElementById('buscasPopulares').style.display = 'block';
+                return;
+            }
+            
+            if (!Array.isArray(data)) {
+                resultadosDiv.innerHTML = '<p class="error-message">Formato de resposta inválido</p>';
+                document.getElementById('mensagemCentral').style.display = 'block';
+                document.getElementById('buscasPopulares').style.display = 'block';
+                return;
+            }
+            
+            if (data.length === 0) {
+                resultadosDiv.innerHTML = '<p style="text-align: center; color: #B0B0B0;">Nenhum álbum encontrado.</p>';
+                document.getElementById('mensagemCentral').style.display = 'block';
+                document.getElementById('buscasPopulares').style.display = 'block';
+                return;
+            }
+            
+            let html = '<h2 style="color: #FFFFFF; margin-bottom: 1rem;">Resultados:</h2>';
+            data.forEach(album => {
+                html += `
+                    <div class="album-result">
+                        ${album.imagem ? `<img src="${album.imagem}" alt="${album.nome}">` : '<div style="width: 80px; height: 80px; background: #555; border-radius: 8px;"></div>'}
+                        <div class="album-info">
+                            <h3>${album.nome}</h3>
+                            <p><strong>Artista:</strong> ${album.artista}</p>
+                            <p><strong>Lançamento:</strong> ${album.data_lancamento}</p>
+                            <p><strong>Músicas:</strong> ${album.total_musicas}</p>
+                            <a href="${album.link_spotify}" target="_blank" class="spotify-link">🎵 Abrir no Spotify</a>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            resultadosDiv.innerHTML = html;
+        }
+    </script>
 </body>
 </html>

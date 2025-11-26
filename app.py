@@ -1,28 +1,36 @@
 from flask import Flask, render_template, request, jsonify
 from integracao_spotify import buscar_album
 
+
 app = Flask(__name__)
+
 
 @app.route('/')
 def homepage():
     return render_template('homepage.html')
 
+
 @app.route('/login')
 def login():
     return render_template('login.html')
 
+
 @app.route('/cadastro')
 def cadastro():
     return render_template('cadastro.html')
+
 
 @app.route('/avaliacao')
 def avaliacao():
     return render_template('avaliacao.html')
 
 
+
+
 @app.route('/busca')
 def busca():
     return render_template('busca.html')
+
 
 @app.route('/api/buscar_album', methods=['POST'])
 def api_buscar_album():
@@ -32,6 +40,10 @@ def api_buscar_album():
     resultados = buscar_album(nome_album)
     return jsonify(resultados)
 
+
 if __name__ == '__main__':
     app.run(debug=True)
-    
+   
+
+
+

@@ -7,15 +7,16 @@ def homepage():
     return render_template('homepage.html')
 
 @app.route('/avaliacao')
-def avaliacao():
-    album = {
-    "titulo": "Currents",
-    "artista": "Tame Impala",
-    "ano": 2015,
-    "genero": "Pop/Indie",
-    "nota": 9.2
-}
-    return render_template('avaliacao.html', album=album)
+def avaliacao(album_id):
+    from integracao_spotify import sp
+    album = sp.album(album_id)  
+    tracks = album["tracks"]["items"]
+
+    return render_template(
+        "avaliacao.html",
+        album=album,
+        tracks=tracks
+    )
 
 @app.route('/cadastro')
 def cadastro():

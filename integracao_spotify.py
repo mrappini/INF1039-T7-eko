@@ -53,3 +53,28 @@ def buscar_album(nome_album):
     except Exception as e:
         print(f"Erro ao buscar álbum: {e}")
         return {"erro": str(e)}
+
+def buscar_album_por_id(album_id):
+    if not sp:
+        return {"erro": "Conexão com Spotify não disponível"}
+
+    try:
+        album = sp.album(album_id)
+        tracks = album["tracks"]["items"]
+
+        return {
+            "id": album["id"],
+            "nome": album["name"],
+            "artista": album["artists"][0]["name"],
+            "ano": album["release_date"][:4],
+            "data_lancamento": album["release_date"],
+            "generos": album.get("genres", []),
+            "imagem": album["images"][0]["url"] if album["images"] else None,
+            "total_musicas": album["total_tracks"],
+            "link_spotify": album["external_urls"]["spotify"],
+            "tracks": tracks
+        }
+
+    except Exception as e:
+        print(f"Erro ao buscar álbum por ID: {e}")
+        return {"erro": str(e)}

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from integracao_spotify import buscar_album
+from integracao_spotify import buscar_album, buscar_album_por_id
 
 app = Flask(__name__)
 
@@ -11,16 +11,10 @@ def homepage():
 def login():
     return render_template('login.html')  # Crie este template se necessário
 
-@app.route('/avaliacao')
-def avaliacao():
-    album = {
-        "titulo": "Currents",
-        "artista": "Tame Impala",
-        "ano": 2015,
-        "genero": "Pop/Indie",
-        "nota": 9.2
-    }
-    return render_template('avaliacao.html', album=album)
+@app.route("/album/<album_id>")
+def avaliacao(album_id):
+    album = buscar_album_por_id(album_id)
+    return render_template("avaliacao.html", album=album)
 
 @app.route('/cadastro')
 def cadastro():

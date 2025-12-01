@@ -59,21 +59,36 @@ def buscar_album_por_id(album_id):
         return {"erro": "Conexão com Spotify não disponível"}
 
     try:
-        album = sp.album(album_id)
-        tracks = album["tracks"]["items"]
-
-        return {
-            "id": album["id"],
-            "nome": album["name"],
-            "artista": album["artists"][0]["name"],
-            "ano": album["release_date"][:4],
-            "data_lancamento": album["release_date"],
-            "generos": album.get("genres", []),
-            "imagem": album["images"][0]["url"] if album["images"] else None,
-            "total_musicas": album["total_tracks"],
-            "link_spotify": album["external_urls"]["spotify"],
-            "tracks": tracks
+        
+        album_raw = sp.album(album_id)
+        
+        album_info = {
+            "id": album_raw["id"],
+            "nome": album_raw["name"],
+            "artista": album_raw["artists"][0]["name"],
+            "ano": album_raw["release_date"][:4],
+            "data_lancamento": album_raw["release_date"],
+            "generos": album_raw.get("genres", []),
+            "imagem": album_raw["images"][0]["url"] if album_raw["images"] else None,
+            "total_musicas": album_raw["total_tracks"],
+            "link_spotify": album_raw["external_urls"]["spotify"],
+            "label": album_raw.get('label', '')
         }
+        
+        faixas = []
+        
+        for item in album_raw['tracks']['items']:
+            faixa = {
+                'numero': item['track_number'],
+                'nome': item['name'],
+                'id': item['id'],
+                'duracao_ms': item['duration_ms'],
+                'preview_url': item['preview_url'],
+                'link_spotify': item['external_urls']['spotify']
+            }
+            faixas.append(faixa)  
+            
+        return album_info,faixas    
 
     except Exception as e:
         print(f"Erro ao buscar álbum por ID: {e}")

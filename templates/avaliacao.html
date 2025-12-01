@@ -1,36 +1,23 @@
 {% extends "base.html" %}
 
-{% block title %}eko - página inicial{% endblock %}
+{% block title %}eko - {{ album.nome }}{% endblock %}
 
-{% block body_class %}class="body-homepage"{% endblock %}
+{% block body_class %}class="body-avaliacao"{% endblock %}
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Ekko - Currents</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <style>
-        * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    body {
+<style>
+    .body-avaliacao {
         font-family: 'Prompt', sans-serif;
         background-color: #1F1F23;
         color: #EDEDED;
     }
-    .container {
+    .container-avaliacao {
         display: flex;
         max-width: 1200px;
         margin: 0 auto;
         padding: 20px;
         gap: 20px;
     }
-
 
     /*Sidebar*/
     .sidebar {
@@ -42,6 +29,7 @@
         height: auto;
         display: block;
         margin-bottom: 20px;
+        border-radius: 4px; 
     }
     .rating-box {
         background-color: #2C2C30;
@@ -67,7 +55,6 @@
         
     }
     .rating-label{
-        
         margin-top:5px;
     }
     .rating-meta {
@@ -110,11 +97,9 @@
         margin-top: 15px;
     }
 
-
-    /*TrackList*/
+/*TrackList*/
     .tracklist {
         margin-bottom: 30px;
-        
     }
     .tracklist h2 {
         font-size: 20px;
@@ -122,15 +107,15 @@
         margin-bottom: 15px;
     }
     .tracks {
+        list-style-type: none;
+        padding-left: 0; 
         list-style-position: inside;
         line-height: 1.8;
     }
     .tracks li {
         padding: 5px 0;
     }
-
     /*Reviews*/
-
     .reviews {
         margin-bottom: 30px;
     }
@@ -277,191 +262,114 @@
         font-size: 12px;
         color: #b0b0b0;
     }
-    </style>
+</style>
 
-</head>
+<div class="container-avaliacao"> 
+    <aside class="sidebar">
+        <div class="album-cover">
+            {% if album.imagem %}
+                <img src="{{ album.imagem }}" alt="{{ album.nome }}">
+            {% else %}
+                <div style="width: 100%; height: 250px; background: #333;"></div>
+            {% endif %}
+        </div>
 
-<body>
-    <div class="container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="album-cover">
-                <img src="{{ album.images[0].url }}" alt="{{ album.name }}">
+        <div class="rating-box">
+            <div class="user-rating">
+                <div class="rating-number">—</div>
+                <div class="rating-label">Avaliação média</div>
+                <div class="rating-meta">Avaliações em breve</div>
             </div>
 
-            <div class="rating-box">
-                <div class="user-rating">
-                    <div class="rating-number">—</div>
-                    <div class="rating-label">Avaliação média</div>
-                    <div class="rating-meta">Avaliações em breve</div>
-                </div>
-
-                <div class="your-rating">
-                    <div class="rating-number">—</div>
-                    <div class="rating-label">Sua avaliação</div>
-                </div>
+            <div class="your-rating">
+                <div class="rating-number">—</div>
+                <div class="rating-label">Sua avaliação</div>
             </div>
-        </aside>
+        </div>
+    </aside>
 
-        <!-- Conteúdo -->
-       <main class="main-content">
-            <!-- Informações do álbum -->
-            <section class="album-info">
-                <h1 class="album-title">{{ album.name }}</h1>
+    <main class="main-content">
+        <section class="album-info">
+            <h1 class="album-title">{{ album.nome }}</h1>
 
-                <div class="album-meta">
-                    <span class="artist">{{ album.artists[0].name }}</span>
-                    <span class="year">Ano: {{ album.release_date[:4] }}</span>
+            <div class="album-meta">
+                <span class="artist">{{ album.artista }}</span>
+                {% if album.data_lancamento %}
+                    <span class="year">Ano: {{ album.data_lancamento[:4] }}</span>
+                {% endif %}
 
-                    {% if album.genres %}
-                        <span class="genre">Gênero: {{ album.genres[0] }}</span>
-                    {% else %}
-                        <span class="genre">Gênero: —</span>
-                    {% endif %}
+                <span class="tracks">Faixas: {{ album.total_musicas }}</span>
+            </div>
 
-                    <span class="tracks">Faixas: {{ tracks|length }}</span>
-                </div>
-
-                <div class="album-description">
-                    <p>{{ album.label or "Álbum sem descrição oficial." }}</p>
-                </div>
-            </section>
-            <!-- TrackList -->
-            <section class="tracklist">
-                <h2>Lista de Faixas</h2>
-
-                <ol class="tracks">
-                    {% for t in tracks %}
-                    <li>{{ t.track_number }} — {{ t.name }} ▶</li>
-                    {% endfor %}
-                </ol>
-            </section>
+        <div class="album-description">
+                {% if album.label %}
+                    <p style="font-size: 14px; margin-top: 10px;">
+                        
+                        <span style="color: #b0b0b0; font-weight: bold;">Gravadora:</span> 
+                        
+                        {{ album.label }}
+                    </p>
+                {% endif %}
+            </div>
 
 
-            <!-- Reviews -->
-            <section class="reviews">
-                <h2>Reviews (2,158)</h2>
-                
-                <div class="review-item">
-                    <div class="review-header">
-                        <div class="user-avatar">👤</div>
-                        <div class="review-info">
-                            <div class="review-top">
-                                <span class="username">Fulano1</span>
-                                <span class="rating-badge">9.4</span>
-                                <span class="timestamp">1 semana atrás</span>
-                            </div>
-                            <p class="review-text">Currents é uma obra-prima da música psicodélica moderna. Kevin Parker conseguiu criar algo completamente único, misturando elementos eletrônicos com a essência psicodélica que define o Tame Impala. 'Let It Happen' é uma jornada de 8 minutos que te transporta para outra dimensão. A produção é impecável e cada faixa flui perfeitamente para a próxima.</p>
-                            <div class="review-actions">
-                                <span class="likes">234 Likes</span>
-                                <button>Responder</button>
-                                <button>Reportar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="review-item">
-                    <div class="review-header">
-                        <div class="user-avatar">👤</div>
-                        <div class="review-info">
-                            <div class="review-top">
-                                <span class="username">Fulano2</span>
-                                <span class="rating-badge">8.7</span>
-                                <span class="timestamp">3 dias atrás</span>
-                            </div>
-                            <p class="review-text">A evolução sonora do Tame Impala em Currents é impressionante. O álbum consegue ser nostálgico e futurista ao mesmo tempo. 'The Less I Know the Better' é um hino absoluto, e 'Eventually' me faz chorar toda vez. A forma como Kevin Parker usa sintetizadores e drum machines é genial.</p>
-                            <div class="review-actions">
-                                <span class="likes">156 Likes</span>
-                                <button>Responder</button>
-                                <button>Reportar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="review-item">
-                    <div class="review-header">
-                        <div class="user-avatar">👤</div>
-                        <div class="review-info">
-                            <div class="review-top">
-                                <span class="username">Fulano3</span>
-                                <span class="rating-badge">7.9</span>
-                                <span class="timestamp">1 mês atrás</span>
-                            </div>
-                            <p class="review-text">Currents tem uma vibe incrível dos anos 80 misturada com psicodelia moderna. Algumas faixas são verdadeiras joias, especialmente 'Yes I'm Changing' e 'Cause I'm a Man'. Talvez seja um pouco longo em alguns momentos, mas a qualidade geral é indiscutível. Kevin Parker é um gênio da produção.</p>
-                            <div class="review-actions">
-                                <span class="likes">89 Likes</span>
-                                <button>Responder</button>
-                                <button>Reportar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="load-more">Ver mais Reviews</button>
-            </section>
-            <section class="similar-albums card">
-                <div class="card-body">
-                    <h2 class="h4 mb-4">Álbuns similares</h2>
-                    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
-                        <div class="col">
-                            <div class="card h-100 album-card">
-                                <div class="position-relative">
-                                    <img src="https://upload.wikimedia.org/wikipedia/en/3/31/Tame_Impala_-_Lonerism.png" alt="Lonerism" class="card-img-top">
-                                    <span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2 rounded-circle album-rating">8.9</span>
-                                </div>
-                                <div class="card-body p-2">
-                                    <div class="album-card-title fw-bold small">Lonerism</div>
-                                    <div class="album-card-artist text-white" style="font-size: 0.85rem;">Tame Impala</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="card h-100 album-card">
-                                <div class="position-relative">
-                                    <img src="https://upload.wikimedia.org/wikipedia/pt/c/c1/The_Weeknd_-_After_Hours.png" alt="After Hours" class="card-img-top">
-                                    <span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2 rounded-circle album-rating">8.2</span>
-                                </div>
-                                <div class="card-body p-2">
-                                    <div class="album-card-title fw-bold small">After Hours</div>
-                                    <div class="album-card-artist text-white" style="font-size: 0.85rem;">The Weeknd</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="card h-100 album-card">
-                                <div class="position-relative">
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/In_Colour_%28Jamie_xx_album%29_album_cover.svg" alt="In Colour" class="card-img-top">
-                                    <span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2 rounded-circle album-rating">8.4</span>
-                                </div>
-                                <div class="card-body p-2">
-                                    <div class="album-card-title fw-bold small">In Colour</div>
-                                    <div class="album-card-artist text-white" style="font-size: 0.85rem;">Jamie xx</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="card h-100 album-card">
-                                <div class="position-relative">
-                                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/3/39/MGMT_-_Congratulations.png/250px-MGMT_-_Congratulations.png" alt="Congratulations" class="card-img-top">
-                                    <span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2 rounded-circle album-rating">7.8</span>
-                                </div>
-                                <div class="card-body p-2">
-                                    <div class="album-card-title fw-bold small">Congratulations</div>
-                                    <div class="album-card-artist text-white" style="font-size: 0.85rem;">MGMT</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+        <section class="tracklist">
+            <h2>tracklist</h2>
             
-        </main>
-    </div>
-</body>
-</html>
+            <ol class="tracks">
+                {% if tracks %}
+                    {% for t in tracks %}
+                        <li style="padding: 8px 0; border-bottom: 1px solid #333;">
+                            <span style="color: #FF6E1A; font-weight: bold; margin-right: 10px;">
+                                {{ loop.index }}
+                            </span>
+                            
+                            <a href="{{ t.link_spotify }}" target="_blank" style="color: #EDEDED; text-decoration: none;">
+                                {{ t.nome }}
+                            </a>
+
+                            {% if t.preview_url %}
+                                <audio controls style="height: 20px; margin-left: 10px; vertical-align: middle;">
+                                    <source src="{{ t.preview_url }}" type="audio/mpeg">
+                                </audio>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <li style="color: #888;">Nenhuma faixa disponível.</li>
+                {% endif %}
+            </ol>
+        </section>
+
+
+        <section class="reviews">
+            <h2>Reviews (3)</h2>
+            
+            <div class="review-item">
+                <div class="review-header">
+                    <div class="user-avatar">👤</div>
+                    <div class="review-info">
+                        <div class="review-top">
+                            <span class="username">Fulano1</span>
+                            <span class="rating-badge">9.4</span>
+                            <span class="timestamp">1 semana atrás</span>
+                        </div>
+                        <p class="review-text">Currents é uma obra-prima da música psicodélica moderna.</p>
+                        <div class="review-actions">
+                            <span class="likes">234 Likes</span>
+                            <button>Responder</button>
+                            <button>Reportar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="similar-albums card" style="background: transparent; border: none;">
+            <p style="color: #666;">(Recomendações em breve)</p>
+        </section>
+        
+    </main>
+</div>
 {% endblock %}

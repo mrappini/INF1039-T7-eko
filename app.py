@@ -7,14 +7,26 @@ app = Flask(__name__)
 def homepage():
     return render_template('homepage.html')
 
-@app.route('/login')  # ← ADICIONE ESTA ROTA
+@app.route('/login')
 def login():
-    return render_template('login.html')  # Crie este template se necessário
+    return render_template('login.html')
 
-@app.route("/album/<album_id>")
-def avaliacao(album_id):
-    album = buscar_album_por_id(album_id)
-    return render_template("avaliacao.html", album=album)
+# RA1: PÁGINA ESPECÍFICA DO ÁLBUM (Mantém o album_id)
+# usada quando o usuário clica em um álbum para avaliar, tipo vindo da busca
+@app.route("/avaliacao/<album_id>")
+def avaliacao_album(album_id):
+    album,tracks = buscar_album_por_id(album_id)
+    
+    if album is None:
+        return "parece que o álbum não foi encontrado...quer tentar novamente?", 404
+    return render_template("avaliacao.html", album=album, tracks=tracks)
+
+# RA2: PÁGINA GENÉRICA (NOVA ROTA PARA O NAVBAR)
+# usada para listar todas as avaliações do usuário.
+
+@app.route("/minhas_avaliacoes")
+def minhas_avaliacoes():
+    return render_template("minhas_avaliacoes.html")
 
 @app.route('/cadastro')
 def cadastro():

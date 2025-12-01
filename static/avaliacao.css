@@ -111,7 +111,8 @@ body {
     margin-bottom: 15px;
 }
 .tracks {
-    list-style-position: inside;
+    list-style-position: none;
+    padding-left: 0;
     line-height: 1.8;
 }
 .tracks li {

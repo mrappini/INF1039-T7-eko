@@ -3,14 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Busca de Música</title>
+    <title>Busca - Eko</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: #1E1E1E;
@@ -18,171 +13,51 @@
             padding: 1.5rem;
             min-height: 100vh;
         }
-
-        .search-page-container {
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        header {
-            margin-bottom: 2rem;
-        }
-
-        .back-arrow {
-            font-size: 1.5rem;
-            color: #FFFFFF;
-            text-decoration: none;
-            line-height: 1;
-            display: inline-block;
-        }
-
-        .search-bar {
-            margin-bottom: 2rem;
-        }
-
-        .search-bar form {
-            display: flex;
-            gap: 10px;
-        }
-
-        .search-bar input {
-            flex: 1;
-            padding: 1rem 1.5rem;
-            border: none;
-            border-radius: 12px;
-            background-color: #2F2F2F;
-            color: #FFFFFF;
-            font-size: 1rem;
-        }
-
-        .search-bar button {
-            padding: 1rem 1.5rem;
-            border: none;
-            border-radius: 12px;
-            background-color: #F76B1C;
-            color: #FFFFFF;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-
-        .search-bar input::placeholder {
-            color: #A0A0A0;
-        }
-
-        .search-bar input:focus {
-            outline: none;
-        }
-
-        .search-center-message {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .search-icon {
-            font-size: 4rem;
-            color: #555555;
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
-        .search-center-message p {
-            color: #B0B0B0;
-        }
-
-        .search-center-message .highlight-text {
-            color: #F76B1C;
-            text-decoration: none;
-        }
-
-        .popular-searches h2 {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #FFFFFF;
-            margin-bottom: 1rem;
-            text-transform: lowercase;
-        }
-
-        .popular-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .popular-list li {
-            margin-bottom: 0.5rem;
-        }
-
-        .popular-list a {
-            display: block;
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            background-color: #2F2F2F;
-            color: #FFFFFF;
-            text-decoration: none;
-            font-size: 1rem;
-            transition: background-color 0.2s ease;
-        }
-
-        .popular-list a:hover {
-            background-color: #3A3A3A;
-        }
-
-        .search-results {
-            margin-top: 2rem;
-        }
-
-        /* Adicionei cursor pointer para indicar que o card é clicável */
-        .album-result {
-            background-color: #2F2F2F;
-            border-radius: 12px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            transition: transform 0.2s; /* Efeito visual opcional */
-        }
+        .search-page-container { width: 100%; max-width: 600px; margin: 0 auto; }
+        header { margin-bottom: 2rem; }
+        .back-arrow { font-size: 1.5rem; color: #FFFFFF; text-decoration: none; line-height: 1; display: inline-block; }
         
-        .album-result:hover {
-            transform: scale(1.01); /* Leve zoom ao passar o mouse */
-            background-color: #3A3A3A;
+        .search-bar { margin-bottom: 2rem; }
+        .search-bar form { display: flex; gap: 10px; }
+        .search-bar input {
+            flex: 1; padding: 1rem 1.5rem; border: none; border-radius: 12px;
+            background-color: #2F2F2F; color: #FFFFFF; font-size: 1rem;
         }
+        .search-bar button {
+            padding: 1rem 1.5rem; border: none; border-radius: 12px;
+            background-color: #F76B1C; color: #FFFFFF; font-size: 1rem; cursor: pointer;
+        }
+        .search-bar input::placeholder { color: #A0A0A0; }
+        .search-bar input:focus { outline: none; }
 
-        .album-result img {
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            object-fit: cover;
-        }
+        .search-center-message { text-align: center; margin-bottom: 2rem; }
+        .search-icon { font-size: 4rem; color: #555555; display: block; margin: 0 auto 0.5rem auto; }
+        .search-center-message p { color: #B0B0B0; }
+        .search-center-message .highlight-text { color: #F76B1C; }
 
-        .album-info {
-            flex: 1;
+        .popular-searches h2 { font-size: 0.9rem; font-weight: 500; color: #FFFFFF; margin-bottom: 1rem; text-transform: lowercase; }
+        .popular-list { list-style: none; padding: 0; }
+        .popular-list li { margin-bottom: 0.5rem; }
+        .popular-list a {
+            display: block; padding: 1rem 1.5rem; border-radius: 12px;
+            background-color: #2F2F2F; color: #FFFFFF; text-decoration: none;
+            font-size: 1rem; transition: background-color 0.2s ease;
         }
+        .popular-list a:hover { background-color: #3A3A3A; }
 
-        .album-info h3 {
-            color: #FFFFFF;
-            margin-bottom: 0.5rem;
+        .search-results { margin-top: 2rem; }
+        .album-result {
+            background-color: #2F2F2F; border-radius: 12px; padding: 1rem;
+            margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;
+            transition: transform 0.2s;
         }
-
-        .album-info p {
-            color: #B0B0B0;
-            margin-bottom: 0.25rem;
-        }
-
-        .spotify-link {
-            color: #1DB954;
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-
-        .error-message {
-            color: #ff4444;
-            text-align: center;
-            padding: 1rem;
-            background-color: #2F2F2F;
-            border-radius: 12px;
-            margin-top: 1rem;
-        }
+        .album-result:hover { transform: scale(1.01); background-color: #3A3A3A; }
+        .album-result img { width: 80px; height: 80px; border-radius: 8px; object-fit: cover; }
+        .album-info { flex: 1; }
+        .album-info h3 { color: #FFFFFF; margin-bottom: 0.5rem; font-size: 1.1rem; }
+        .album-info p { color: #B0B0B0; margin-bottom: 0.25rem; font-size: 0.9rem; }
+        .spotify-link { color: #1DB954; text-decoration: none; font-size: 0.8rem; display: inline-block; margin-top: 5px; }
+        .error-message { color: #ff4444; text-align: center; padding: 1rem; background-color: #2F2F2F; border-radius: 12px; margin-top: 1rem; }
     </style>
 </head>
 <body>
@@ -194,7 +69,7 @@
 
         <div class="search-bar">
             <form id="buscaForm">
-                <input type="text" id="albumInput" name="album" placeholder="qual o ritmo de hoje?" aria-label="Buscar álbum" required>
+                <input type="text" id="searchInput" name="query" placeholder="qual o álbum / artista de hoje?" aria-label="Buscar" required>
                 <button type="submit">Buscar</button>
             </form>
         </div>
@@ -210,64 +85,52 @@
         </div>
 
         <div id="buscasPopulares" class="popular-searches">
-            <h2>álbuns populares</h2>
-            
+            <h2>você também pode gostar...</h2>
             <ul class="popular-list">
-                <li>
-                    <a href="#" onclick="testeBusca('Back in Black')">Back in Black - AC/DC</a>
-                </li>
-                <li>
-                    <a href="#" onclick="testeBusca('Short n Sweet')">Short n' Sweet - Sabrina Carpenter</a>
-                </li>
-                <li>
-                    <a href="#" onclick="testeBusca('Blonde')">Blonde - Frank Ocean</a>
-                </li>
-                <li>
-                    <a href="#" onclick="testeBusca('Off the Wall')">Off the Wall - Michael Jackson</a>
-                </li>
+                <li><a href="#" onclick="testeBusca('Frank Ocean')">Frank Ocean (Artista)</a></li>
+                <li><a href="#" onclick="testeBusca('Short n Sweet')">Short n' Sweet (Álbum)</a></li>
+                <li><a href="#" onclick="testeBusca('Pink Floyd')">Pink Floyd (Artista)</a></li>
+                <li><a href="#" onclick="testeBusca('Thriller')">Thriller (Álbum)</a></li>
             </ul>
         </div>
     </div>
 
     <script>
-        function testeBusca(album) {
-            console.log('🧪 Executando teste de busca:', album);
-            document.getElementById('albumInput').value = album;
+        function testeBusca(termo) {
+            console.log('🧪 Teste de busca:', termo);
+            document.getElementById('searchInput').value = termo;
+            // Dispara o evento de submit manualmente
             document.getElementById('buscaForm').dispatchEvent(new Event('submit'));
         }
 
         document.getElementById('buscaForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const albumInput = document.getElementById('albumInput').value;
-            console.log('🔍 Buscando álbum:', albumInput);
+            const termoInput = document.getElementById('searchInput').value;
+            console.log('🔍 Buscando por:', termoInput);
             
-            document.getElementById('resultados').innerHTML = '<p style="text-align: center; color: #B0B0B0;">Buscando...</p>';
+            const resultadosDiv = document.getElementById('resultados');
+            resultadosDiv.innerHTML = '<p style="text-align: center; color: #B0B0B0; margin-top:20px;">Pesquisando no Spotify®...</p>';
             
+            // Esconde interface inicial
             document.getElementById('mensagemCentral').style.display = 'none';
             document.getElementById('buscasPopulares').style.display = 'none';
             
             const formData = new FormData();
-            formData.append('album', albumInput);
+            formData.append('query', termoInput);
             
             fetch('/api/buscar_album', {
                 method: 'POST',
                 body: formData
             })
-            .then(response => {
-                console.log('📡 Status da resposta:', response.status);
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                console.log('📊 Dados recebidos:', data);
                 mostrarResultados(data);
             })
             .catch(error => {
-                console.error('💥 Erro na busca:', error);
-                document.getElementById('resultados').innerHTML = '<p class="error-message">Erro na busca: ' + error + '</p>';
-                
+                console.error('💥 Erro:', error);
+                resultadosDiv.innerHTML = '<p class="error-message">Erro na comunicação com o servidor.</p>';
                 document.getElementById('mensagemCentral').style.display = 'block';
-                document.getElementById('buscasPopulares').style.display = 'block';
             });
         });
 
@@ -275,41 +138,32 @@
             const resultadosDiv = document.getElementById('resultados');
             
             if (data.erro) {
-                resultadosDiv.innerHTML = '<p class="error-message">Erro: ' + data.erro + '</p>';
-                document.getElementById('mensagemCentral').style.display = 'block';
-                document.getElementById('buscasPopulares').style.display = 'block';
+                resultadosDiv.innerHTML = `<p class="error-message">${data.erro}</p>`;
                 return;
             }
             
-            if (!Array.isArray(data)) {
-                resultadosDiv.innerHTML = '<p class="error-message">Formato de resposta inválido</p>';
-                document.getElementById('mensagemCentral').style.display = 'block';
-                document.getElementById('buscasPopulares').style.display = 'block';
+            if (!Array.isArray(data) || data.length === 0) {
+                resultadosDiv.innerHTML = '<p style="text-align: center; color: #B0B0B0; margin-top: 2rem;">Nenhum álbum encontrado para essa busca.</p>';
                 return;
             }
             
-            if (data.length === 0) {
-                resultadosDiv.innerHTML = '<p style="text-align: center; color: #B0B0B0;">Nenhum álbum encontrado.</p>';
-                document.getElementById('mensagemCentral').style.display = 'block';
-                document.getElementById('buscasPopulares').style.display = 'block';
-                return;
-            }
+            let html = '<h2 style="color: #FFFFFF; margin-bottom: 1rem; font-size: 1rem;">Resultados encontrados:</h2>';
             
-            let html = '<h2 style="color: #FFFFFF; margin-bottom: 1rem;">Resultados:</h2>';
             data.forEach(album => {
-                // modifiquei aqui: criamos a URL com o ID e envolvemos o card em um <a> pra funcionar direito a nevegação
                 const urlAvaliacao = `/avaliacao/${album.id}`;
                 
+                // Card clicável inteiro
                 html += `
                     <a href="${urlAvaliacao}" style="text-decoration: none; color: inherit; display: block;">
                         <div class="album-result">
-                            ${album.imagem ? `<img src="${album.imagem}" alt="${album.nome}">` : '<div style="width: 80px; height: 80px; background: #555; border-radius: 8px;"></div>'}
+                            ${album.imagem 
+                                ? `<img src="${album.imagem}" alt="${album.nome}">` 
+                                : '<div style="width: 80px; height: 80px; background: #333; border-radius: 8px; display:flex; align-items:center; justify-content:center;">🎵</div>'}
+                            
                             <div class="album-info">
                                 <h3>${album.nome}</h3>
                                 <p><strong>Artista:</strong> ${album.artista}</p>
-                                <p><strong>Lançamento:</strong> ${album.data_lancamento}</p>
-                                <p><strong>Músicas:</strong> ${album.total_musicas}</p>
-                                <a href="${album.link_spotify}" target="_blank" class="spotify-link" onclick="event.stopPropagation()">🎵 Abrir no Spotify</a>
+                                <p style="font-size: 0.8rem; opacity: 0.7;">${album.data_lancamento || ''} • ${album.total_musicas} faixas</p>
                             </div>
                         </div>
                     </a>

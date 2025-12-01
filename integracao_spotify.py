@@ -1,95 +1,106 @@
-import spotipy 
-from spotipy.oauth2 import SpotifyClientCredentials 
-import os 
-from dotenv import load_dotenv 
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
+import os
 
-# Carrega as variáveis de ambiente 
-load_dotenv() 
+# CONFIGURAÇÃO DO SPOTIFY
+CLIENT_ID = os.getenv('SPOTIPY_CLIENT_ID', 'SUA_CLIENT_ID_AQUI')
+CLIENT_SECRET = os.getenv('SPOTIPY_CLIENT_SECRET', 'SUA_CLIENT_SECRET_AQUI')
 
-# Credenciais do Spotify 
-CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID") 
-CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET") 
+auth_manager = SpotifyClientCredentials(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
+sp = spotipy.Spotify(auth_manager=auth_manager)
 
-print(f"CLIENT_ID: {CLIENT_ID}") 
-print(f"CLIENT_SECRET: {CLIENT_SECRET}") 
+def buscar_album(termo_busca):
+    """
+    Busca Híbrida: Realiza duas buscas separadas (por artista e por nome) 
+    e combina os resultados para garantir que nada fique de fora.
+    """
+    if not termo_busca:
+        return []
 
-# Inicializa o cliente do Spotify 
-sp = None 
-try: 
-    auth_manager = SpotifyClientCredentials(
-        client_id=CLIENT_ID,
-        client_secret=CLIENT_SECRET
-    )
-    sp = spotipy.Spotify(auth_manager=auth_manager)
-    print("✅ Conexão com Spotify bem-sucedida!") 
-except Exception as e: 
-    print(f"❌ Erro ao autenticar com o Spotify: {e}") 
-
-def buscar_album(nome_album): 
-    if not sp:
-        return {"erro": "Conexão com Spotify não disponível"}
-    
-    try: 
-        resultados = sp.search(
-            q=f'album:"{nome_album}"',
-            type='album',
-            limit=10
-        )
-        
-        albuns = []
-        for item in resultados['albums']['items']:
-            album_info = {
-                'id': item['id'],
-                'nome': item['name'],
-                'artista': item['artists'][0]['name'],
-                'imagem': item['images'][0]['url'] if item['images'] else None,
-                'data_lancamento': item['release_date'],
-                'total_musicas': item['total_tracks'],
-                'link_spotify': item['external_urls']['spotify']
-            }
-            albuns.append(album_info)
-        
-        return albuns
-    except Exception as e:
-        print(f"Erro ao buscar álbum: {e}")
-        return {"erro": str(e)}
-
-def buscar_album_por_id(album_id):
-    if not sp:
-        return {"erro": "Conexão com Spotify não disponível"}
+    lista_final = []
+    ids_processados = set() # usado para evitar álbuns duplicados
 
     try:
         
-        album_raw = sp.album(album_id)
+        # primeiro, buscamos como se fosse um ARTISTA (Ex: Stevie Wonder)
+        resultados_artista = sp.search(q=f'artist:"{termo_busca}"', type='album', limit=50, market='BR')
         
-        album_info = {
-            "id": album_raw["id"],
-            "nome": album_raw["name"],
-            "artista": album_raw["artists"][0]["name"],
-            "ano": album_raw["release_date"][:4],
-            "data_lancamento": album_raw["release_date"],
-            "generos": album_raw.get("genres", []),
-            "imagem": album_raw["images"][0]["url"] if album_raw["images"] else None,
-            "total_musicas": album_raw["total_tracks"],
-            "link_spotify": album_raw["external_urls"]["spotify"],
-            "label": album_raw.get('label', '')
-        }
-        
-        faixas = []
-        
-        for item in album_raw['tracks']['items']:
-            faixa = {
-                'numero': item['track_number'],
-                'nome': item['name'],
-                'id': item['id'],
-                'duracao_ms': item['duration_ms'],
-                'preview_url': item['preview_url'],
-                'link_spotify': item['external_urls']['spotify']
-            }
-            faixas.append(faixa)  
+        # depois, buscamos como se fosse um NOME DE ÁLBUM (Ex: Thriller)
+        # usamos o termo puro aqui para pegar qualquer match de texto
+        resultados_nome = sp.search(q=termo_busca, type='album', limit=20, market='BR')
+
+        def processar_resultados(items):
+            for item in items:
+                if not item: continue
+                
+                if item['id'] in ids_processados:
+                    continue
+                
+                try:
+                    # tenta pegar imagem, se não tiver usa None
+                    imagem_url = item['images'][0]['url'] if item['images'] else None
+                    
+                    # pega apenas o ano da data (YYYY)
+                    data_lancamento = item.get('release_date', '')[:4] if item.get('release_date') else 'N/A'
+
+                    album_data = {
+                        'nome': item['name'],
+                        'artista': item['artists'][0]['name'],
+                        'imagem': imagem_url,
+                        'id': item['id'],
+                        'data_lancamento': data_lancamento,
+                        'total_musicas': item['total_tracks'],
+                        'link_spotify': item['external_urls']['spotify']
+                    }
+                    
+                    lista_final.append(album_data)
+                    ids_processados.add(item['id'])
+                    
+                except Exception as e:
+                    continue
+
+        # processa primeiro os resultados de ARTISTA (prioridade)
+        if 'albums' in resultados_artista:
+            processar_resultados(resultados_artista['albums']['items'])
             
-        return album_info,faixas    
+        # processa depois os resultados de NOME
+        if 'albums' in resultados_nome:
+            processar_resultados(resultados_nome['albums']['items'])
 
     except Exception as e:
+        print(f"Erro na busca: {e}")
+        return []
+            
+    return lista_final
+
+def buscar_album_por_id(album_id):
+    """
+    Busca detalhes de um álbum específico pelo ID.
+    """
+    try:
+        album_data = sp.album(album_id)
+        tracks_data = sp.album_tracks(album_id)
+        
+        album_info = {
+            'nome': album_data['name'],
+            'artista': album_data['artists'][0]['name'],
+            'imagem': album_data['images'][0]['url'] if album_data['images'] else None,
+            'data_lancamento': album_data['release_date'][:4],
+            'total_musicas': album_data['total_tracks'],
+            'link_spotify': album_data['external_urls']['spotify'],
+            'id': album_data['id']
+        }
+        
+        tracks_info = []
+        for track in tracks_data['items']:
+            tracks_info.append({
+                'nome': track['name'],
+                'duracao_ms': track['duration_ms'],
+                'numero': track['track_number'],
+                'preview_url': track['preview_url']
+            })
+            
+        return album_info, tracks_info
+    except Exception as e:
         print(f"Erro ao buscar álbum por ID: {e}")
-        return {"erro": str(e)}
+        return None, None

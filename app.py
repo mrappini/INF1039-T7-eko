@@ -23,7 +23,7 @@ def busca():
 
 @app.route("/minhas_avaliacoes")
 def minhas_avaliacoes():
-    return render_template("minhas_avaliacoes.html")
+    return render_template("profile.html")
 
 
 

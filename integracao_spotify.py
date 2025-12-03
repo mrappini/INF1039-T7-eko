@@ -104,7 +104,8 @@ def buscar_album_por_id(album_id):
                 'nome': track['name'],
                 'duracao_ms': track['duration_ms'],
                 'numero': track['track_number'],
-                'preview_url': track['preview_url']
+                'preview_url': track['preview_url'],
+                'link_spotify': track['external_urls']['spotify'],
             })
             
         return album_info, tracks_info

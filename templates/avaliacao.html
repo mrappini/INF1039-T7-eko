@@ -11,368 +11,271 @@
         background-color: #1F1F23;
         color: #EDEDED;
     }
+
+    /* Layout Principal (Sidebar Esquerda + Conteúdo Direita) */
     .container-avaliacao {
         display: flex;
+        align-items: flex-start;
         max-width: 1200px;
         margin: 0 auto;
-        padding: 20px;
-        gap: 20px;
+        padding: 40px 20px;
+        gap: 30px;
     }
 
-    /*Sidebar*/
+    /* --- Sidebar --- */
     .sidebar {
-        width: 250px;
+        width: 300px;
         flex-shrink: 0;
+        position: sticky;
+        top: 20px;
     }
+
     .album-cover img {
         width: 100%;
         height: auto;
         display: block;
         margin-bottom: 20px;
-        border-radius: 4px; 
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
+
     .rating-box {
         background-color: #2C2C30;
         padding: 20px;
+        border-radius: 8px;
         margin-bottom: 15px;
     }
-    .user-rating,
-    .your-rating {
+
+    .user-rating, .your-rating {
         text-align: center;
-        padding: 15px 0;
-    }
-    .your-rating{
-        border-top: 1px solid #FF6E1A;
-        margin-top:15px;
-        padding-top: 15px;
-    }
-    .rating-number{
-        font-size:25px;
-        font-weight:bold;
-        background-color:  #FF6E1A;
-        color: rgb(0, 0, 0);
-        padding: 0px 0px;
-        
-    }
-    .rating-label{
-        margin-top:5px;
-    }
-    .rating-meta {
-        font-size: 11px;
-        margin-top: 8px;
-        color: #666;
+        padding: 10px 0;
     }
 
-    /*Conteudo*/
+    .your-rating {
+        border-top: 1px solid #444;
+        margin-top: 15px;
+        padding-top: 15px;
+    }
+
+    .rating-number {
+        font-size: 28px;
+        font-weight: bold;
+        background-color: #FF6E1A;
+        color: #000;
+        display: inline-block;
+        padding: 2px 12px;
+        border-radius: 4px;
+        margin-bottom: 5px;
+    }
+    .rating-label { font-size: 14px; color: #ccc; }
+    .rating-meta { font-size: 11px; margin-top: 5px; color: #888; }
+
+
+    /* --- Área Principal --- */
     .main-content {
         flex: 1;
         background-color: #2C2C30;
-        padding: 30px;
+        padding: 40px;
+        border-radius: 12px;
         color: #EDEDED;
+        min-width: 0;
     }
+
+    /* Cabeçalho do Álbum (Fica no topo, largura total) */
     .album-info {
         margin-bottom: 30px;
+        border-bottom: 1px solid #444;
+        padding-bottom: 20px;
     }
     .album-title {
-        font-weight: bold;
-        font-size: 36px;
-        margin-bottom: 10px;
+        font-weight: bold; font-size: 42px; line-height: 1.1; margin-bottom: 10px; color: #fff;
     }
     .album-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-        margin-bottom: 15px;
-        font-size: 14px;
+        display: flex; flex-wrap: wrap; gap: 15px; font-size: 15px; color: #b0b0b0;
     }
-    .album-meta span {
-        display: inline-block;
-    }
-    .artist {
-        font-weight: bold;
-        font-size:15px;
-    }
-    .album-description {
-        line-height: 1.6;
-        margin-top: 15px;
-    }
+    .artist { color: #fff; font-weight: bold; }
 
-/*TrackList*/
-    .tracklist {
-        margin-bottom: 30px;
-    }
-    .tracklist h2 {
-        font-size: 20px;
-        font-weight:bold;
-        margin-bottom: 15px;
-    }
-    .tracks {
-        list-style-type: none;
-        padding-left: 0; 
-        list-style-position: inside;
-        line-height: 1.8;
-    }
-    .tracks li {
-        padding: 5px 0;
-    }
-    /*Reviews*/
-    .reviews {
-        margin-bottom: 30px;
-    }
-    .reviews h2 {
-        font-size: 20px;
-        margin-bottom: 20px;
-        font-weight:bold;
-    }
-    .review-item {
-        background-color: #1F1F23;
-        padding: 20px;
-        margin-bottom: 15px;
-        border-radius: 4px;
-    }
-    .review-header {
-        display: flex;
-        gap: 15px;
-    }
-    .user-avatar {
-        width: 50px;
-        height: 50px;
-        background-color: #333;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 24px;
-        flex-shrink: 0;
-    }
-    .review-info {
-        flex: 1;
-    }
-    .review-top {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 10px;
-    }
-    .username {
-        font-weight: bold;
-    }
-    .rating-badge {
-        background-color:  #FF6E1A;
-        color: rgb(0, 0, 0);
-        padding: 3px 8px;
-        border-radius: 3px;
-        font-size: 14px;
-        font-weight: bold;
-    }
-    .timestamp {
-        color: #666;
-        font-size: 13px;
-        margin-left: auto;
-    }
-    .review-text {
-        line-height: 1.6;
-        margin-bottom: 10px;
-    }
-    .review-actions {
-        display: flex;
-        gap: 15px;
-        font-size: 13px;
-        color: #666;
-    }
-    .review-actions button {
-        background: none;
-        border: none;
-        color: #666;
-        cursor: pointer;
-        padding: 0;
-        text-decoration: underline;
-    }
-    .review-actions button:hover {
-        color: #333;
-    }
-    .load-more {
-        display: block;
-        margin: 20px auto;
-        padding: 12px 30px;
-        background-color: #666;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 14px;
-    }
-    .load-more:hover {
-        background-color: #555;
-    }
-
-    .similar-albums {
-    margin-bottom: 30px;
-    background-color: #2a2a2a;
-    }
-
-    .similar-albums h2 {
-        font-size: 20px;
-        margin-bottom: 20px;
-        color: #ffffff;
-    }
-
-    .albums-grid {
+    /* --- GRID MÁGICO (Onde a mudança acontece) --- */
+    /* Cria duas colunas: Tracklist na esq, Reviews na dir */
+    .content-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 20px;
+        grid-template-columns: 1fr 1fr; /* 50% para cada lado */
+        gap: 40px; /* Espaço entre as colunas */
+        align-items: start; /* Alinha tudo ao topo */
     }
 
-    .album-card {
-        cursor: pointer;
-        background-color: transparent;
-    }
-
-    .album-card-cover {
-        position: relative;
-        margin-bottom: 8px;
-    }
-
-    .album-card-cover img {
-        width: 100%;
-        height: auto;
-        display: block;
-    }
-
-    .album-rating {
-        position: absolute;
-        top: 8px;
-        left: 8px;
-        background-color: #ff8c00;
-        color: white;
-        padding: 4px 8px;
-        border-radius: 50%;
-        font-size: 12px;
-        font-weight: bold;
-    }
-
-    .album-card-title {
-        font-weight: bold;
+    /* Tracklist */
+    .tracklist h2 { font-size: 20px; font-weight: bold; margin-bottom: 20px; color: #fff; }
+    .tracks { list-style: none; padding: 0; }
+    .tracks li {
+        padding: 10px 0;
+        border-bottom: 1px solid #3a3a3e;
+        display: flex;
+        align-items: center;
         font-size: 14px;
-        margin-bottom: 3px;
-        color: #ffffff;
     }
+    .tracks li:hover { background-color: #353539; padding-left: 5px; border-radius: 4px; transition: 0.2s;}
+    .track-num { color: #FF6E1A; font-weight: bold; margin-right: 15px; width: 20px; text-align: right; }
+    .track-name { color: #EDEDED; text-decoration: none; flex: 1; }
 
-    .album-card-artist {
-        font-size: 12px;
-        color: #b0b0b0;
+    /* Reviews Section */
+    .reviews h2 { font-size: 20px; margin-bottom: 20px; font-weight: bold; color: #fff; }
+
+    /* Inputs e Formulário */
+    .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 13px; color: #ccc; }
+    
+    .custom-input, .custom-textarea {
+        width: 100%; padding: 10px; background-color: #1F1F23; border: 1px solid #444;
+        border-radius: 6px; color: #fff; font-family: inherit; margin-bottom: 15px; font-size: 14px;
+    }
+    .custom-input:focus, .custom-textarea:focus { outline: none; border-color: #FF6E1A; }
+
+    .submit-btn {
+        background-color: #FF6E1A; color: #000; font-weight: bold; border: none;
+        padding: 10px 20px; border-radius: 6px; cursor: pointer; width: 100%; transition: 0.2s;
+    }
+    .submit-btn:hover { background-color: #ff8540; }
+
+    /* Slider */
+    .slider-container { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+    .rating-display { font-size: 24px; font-weight: bold; color: #FF6E1A; min-width: 50px; }
+    .slider { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 5px; background: #444; outline: none; cursor: pointer; }
+    .slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #EDEDED; cursor: pointer; border: 2px solid #1F1F23; margin-top: -6px; }
+    .slider::-moz-range-thumb { width: 18px; height: 18px; border: none; border-radius: 50%; background: #EDEDED; cursor: pointer; }
+
+    /* --- RESPONSIVIDADE (MOBILE) --- */
+    @media (max-width: 900px) {
+        .container-avaliacao {
+            flex-direction: column; /* Sidebar em cima, conteúdo embaixo */
+            gap: 20px;
+        }
+        .sidebar { width: 100%; max-width: 350px; margin: 0 auto; position: static; }
+        
+        /* No mobile, desfazemos as duas colunas e empilhamos */
+        .content-grid {
+            grid-template-columns: 1fr; 
+            gap: 30px;
+        }
+        
+        .main-content { padding: 20px; }
+        .album-title { font-size: 32px; }
     }
 </style>
 
 <div class="container-avaliacao"> 
+    
     <aside class="sidebar">
         <div class="album-cover">
             {% if album.imagem %}
                 <img src="{{ album.imagem }}" alt="{{ album.nome }}">
             {% else %}
-                <div style="width: 100%; height: 250px; background: #333;"></div>
+                <div style="width: 100%; height: 300px; background: #333; border-radius: 8px;"></div>
             {% endif %}
         </div>
 
         <div class="rating-box">
             <div class="user-rating">
                 <div class="rating-number">—</div>
-                <div class="rating-label">Avaliação média</div>
-                <div class="rating-meta">Avaliações em breve</div>
+                <div class="rating-label">Média Geral</div>
+                <div class="rating-meta">Calculando...</div>
             </div>
-
             <div class="your-rating">
-                <div class="rating-number">—</div>
-                <div class="rating-label">Sua avaliação</div>
+                <div class="rating-label" style="color: #FF6E1A; font-weight: bold;">Sua Avaliação</div>
             </div>
         </div>
     </aside>
 
     <main class="main-content">
+        
         <section class="album-info">
             <h1 class="album-title">{{ album.nome }}</h1>
-
             <div class="album-meta">
                 <span class="artist">{{ album.artista }}</span>
                 {% if album.data_lancamento %}
-                    <span class="year">Ano: {{ album.data_lancamento[:4] }}</span>
+                    <span>• {{ album.data_lancamento[:4] }}</span>
                 {% endif %}
-
-                <span class="tracks">Faixas: {{ album.total_musicas }}</span>
+                <span>• {{ album.total_musicas }} faixas</span>
             </div>
+             {% if album.label %}
+                <p style="font-size: 13px; color: #888; margin-top: 10px;">
+                    Gravadora: {{ album.label }}
+                </p>
+            {% endif %}
+        </section>
 
-        <div class="album-description">
-                {% if album.label %}
-                    <p style="font-size: 14px; margin-top: 10px;">
-                        
-                        <span style="color: #b0b0b0; font-weight: bold;">Gravadora:</span> 
-                        
-                        {{ album.label }}
-                    </p>
-                {% endif %}
-            </div>
-
-
-
-        <section class="tracklist">
-            <h2>tracklist</h2>
+        <div class="content-grid">
             
-            <ol class="tracks">
-                {% if tracks %}
-                    {% for t in tracks %}
-                        <li style="padding: 8px 0; border-bottom: 1px solid #333;">
-                            <span style="color: #FF6E1A; font-weight: bold; margin-right: 10px;">
-                                {{ loop.index }}
-                            </span>
-                            
-                            <a href="{{ t.link_spotify }}" target="_blank" style="color: #EDEDED; text-decoration: none;">
-                                {{ t.nome }}
-                            </a>
+            <section class="tracklist">
+                <h2>Tracklist</h2>
+                <ol class="tracks">
+                    {% if tracks %}
+                        {% for t in tracks %}
+                            <li>
+                                <span class="track-num">{{ loop.index }}</span>
+                                <a href="{{ t.link_spotify }}" target="_blank" class="track-name">{{ t.nome }}</a>
+                                {% if t.preview_url %}
+                                    <audio controls style="height: 20px; width: 80px; opacity: 0.7;">
+                                        <source src="{{ t.preview_url }}" type="audio/mpeg">
+                                    </audio>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    {% else %}
+                        <li style="color: #888;">Nenhuma faixa disponível.</li>
+                    {% endif %}
+                </ol>
+            </section>
 
-                            {% if t.preview_url %}
-                                <audio controls style="height: 20px; margin-left: 10px; vertical-align: middle;">
-                                    <source src="{{ t.preview_url }}" type="audio/mpeg">
-                                </audio>
-                            {% endif %}
-                        </li>
-                    {% endfor %}
-                {% else %}
-                    <li style="color: #888;">Nenhuma faixa disponível.</li>
-                {% endif %}
-            </ol>
-        </section>
+            <section class="reviews">
+                <h2>Deixe sua avaliação</h2>
 
+                <form id="formReview">
+                    <input type="hidden" name="album_id" value="{{ album.id }}">
 
-        <section class="reviews">
-            <h2>Avaliações</h2>
+                    <div class="form-group">
+                        <label>Seu nome</label>
+                        <input type="text" name="user" class="custom-input" placeholder="Como você quer ser chamado?" required>
+                    </div>
 
-            <form id="formReview" style="margin-bottom: 30px;">
-                <input type="hidden" name="album_id" value="{{ album.id }}">
+                    <div class="form-group">
+                        <label>Nota</label>
+                        <div class="slider-container">
+                            <input type="range" min="0" max="10" step="0.1" value="0" name="rating" class="slider" id="ratingRange">
+                            <span id="ratingValue" class="rating-display">0.0</span>
+                        </div>
+                    </div>
 
-                <label style="display:block; margin-bottom:5px;">Seu nome:</label>
-                <input type="text" name="user" required style="width:100%; padding:10px; margin-bottom:15px;">
+                    <div class="form-group">
+                        <label>Comentário</label>
+                        <textarea name="comentario" rows="4" class="custom-textarea" placeholder="O que você achou deste álbum?"></textarea>
+                    </div>
 
-                <label style="display:block; margin-bottom:5px;">Nota (0.0 a 10.0):</label>
-                <input type="number" step="0.1" min="0" max="10" name="rating" required
-                    style="width:100%; padding:10px; margin-bottom:15px;">
+                    <button type="submit" class="submit-btn">
+                        Enviar Avaliação
+                    </button>
+                </form>
 
-                <label style="display:block; margin-bottom:5px;">Comentário:</label>
-                <textarea name="comentario" rows="4"
-                        style="width:100%; padding:10px; margin-bottom:15px;"></textarea>
-
-                <button type="submit" class="load-more" style="background:#FF6E1A;">
-                    Enviar avaliação
-                </button>
-            </form>
-
-            <div id="reviews"></div>
-        </section>
-
-
-        <section class="similar-albums card" style="background: transparent; border: none;">
-            <p style="color: #666;">(Recomendações em breve)</p>
-        </section>
+                <div id="reviews" style="margin-top: 30px;">
+                    </div>
+            </section>
         
-    </main>
+        </div> </main>
 </div>
+
+<script>
+    const slider = document.getElementById("ratingRange");
+    const output = document.getElementById("ratingValue");
+
+    function updateSlider() {
+        let val = parseFloat(slider.value).toFixed(1);
+        output.innerHTML = val;
+        
+        const percentage = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+        slider.style.background = `linear-gradient(to right, #FF6E1A ${percentage}%, #444 ${percentage}%)`;
+    }
+
+    slider.addEventListener("input", updateSlider);
+    updateSlider(); 
+</script>
+
 {% endblock %}

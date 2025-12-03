@@ -46,18 +46,64 @@
         .popular-list a:hover { background-color: #3A3A3A; }
 
         .search-results { margin-top: 2rem; }
+        
+        /* --- ESTILOS DO CARD E BOTÃO SPOTIFY --- */
         .album-result {
-            background-color: #2F2F2F; border-radius: 12px; padding: 1rem;
-            margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;
+            background-color: #2F2F2F; 
+            border-radius: 12px; 
+            margin-bottom: 1rem; 
+            display: flex; 
+            align-items: center; 
             transition: transform 0.2s;
+            /* Importante: padding zero aqui para os filhos controlarem o espaço */
+            padding: 0; 
+            position: relative;
+            overflow: hidden;
         }
         .album-result:hover { transform: scale(1.01); background-color: #3A3A3A; }
+
+        /* Link principal (Capa + Texto) */
+        .album-link-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex: 1; /* Ocupa todo o espaço sobrando */
+            padding: 1rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
         .album-result img { width: 80px; height: 80px; border-radius: 8px; object-fit: cover; }
         .album-info { flex: 1; }
         .album-info h3 { color: #FFFFFF; margin-bottom: 0.5rem; font-size: 1.1rem; }
         .album-info p { color: #B0B0B0; margin-bottom: 0.25rem; font-size: 0.9rem; }
-        .spotify-link { color: #1DB954; text-decoration: none; font-size: 0.8rem; display: inline-block; margin-top: 5px; }
+        
         .error-message { color: #ff4444; text-align: center; padding: 1rem; background-color: #2F2F2F; border-radius: 12px; margin-top: 1rem; }
+
+        /* Botão do Spotify (Direita) */
+        .spotify-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: transparent;
+            border: 1px solid #1DB954; /* Borda verde */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-right: 15px; /* Espaço da borda direita */
+            color: #1DB954;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            z-index: 2;
+            cursor: pointer;
+        }
+
+        .spotify-btn:hover {
+            background-color: #1DB954;
+            color: #FFFFFF;
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(29, 185, 84, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -99,7 +145,6 @@
         function testeBusca(termo) {
             console.log('🧪 Teste de busca:', termo);
             document.getElementById('searchInput').value = termo;
-            // Dispara o evento de submit manualmente
             document.getElementById('buscaForm').dispatchEvent(new Event('submit'));
         }
 
@@ -112,7 +157,6 @@
             const resultadosDiv = document.getElementById('resultados');
             resultadosDiv.innerHTML = '<p style="text-align: center; color: #B0B0B0; margin-top:20px;">Pesquisando no Spotify®...</p>';
             
-            // Esconde interface inicial
             document.getElementById('mensagemCentral').style.display = 'none';
             document.getElementById('buscasPopulares').style.display = 'none';
             
@@ -151,11 +195,11 @@
             
             data.forEach(album => {
                 const urlAvaliacao = `/avaliacao/${album.id}`;
+                const urlSpotify = album.link_spotify || '#'; 
                 
-                // Card clicável inteiro
                 html += `
-                    <a href="${urlAvaliacao}" style="text-decoration: none; color: inherit; display: block;">
-                        <div class="album-result">
+                    <div class="album-result">
+                        <a href="${urlAvaliacao}" class="album-link-wrapper">
                             ${album.imagem 
                                 ? `<img src="${album.imagem}" alt="${album.nome}">` 
                                 : '<div style="width: 80px; height: 80px; background: #333; border-radius: 8px; display:flex; align-items:center; justify-content:center;">🎵</div>'}
@@ -165,8 +209,14 @@
                                 <p><strong>Artista:</strong> ${album.artista}</p>
                                 <p style="font-size: 0.8rem; opacity: 0.7;">${album.data_lancamento || ''} • ${album.total_musicas} faixas</p>
                             </div>
-                        </div>
-                    </a>
+                        </a>
+
+                        <a href="${urlSpotify}" target="_blank" class="spotify-btn" title="Ouvir no Spotify">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2ZM16.56 16.68C16.293 17.11 15.73 17.243 15.3 16.977C12.78 15.437 9.60001 15.08 5.63001 15.99C5.14001 16.1 4.65001 15.79 4.54001 15.3C4.43001 14.81 4.74001 14.32 5.23001 14.21C9.65001 13.2 13.21 13.62 16.08 15.38C16.52 15.65 16.65 16.22 16.38 16.65L16.56 16.68ZM17.89 13.53C17.57 14.05 16.89 14.21 16.37 13.89C13.38 12.05 8.87001 11.52 5.32001 12.6C4.75001 12.77 4.15001 12.45 3.98001 11.88C3.81001 11.31 4.13001 10.71 4.70001 10.54C8.84001 9.28001 13.9 9.89001 17.46 12.08C17.98 12.4 18.14 13.08 17.82 13.6L17.89 13.53ZM18.01 10.27C14.37 8.11001 8.35001 7.91001 4.87001 8.97001C4.31001 9.14001 3.73001 8.82001 3.56001 8.26001C3.39001 7.70001 3.71001 7.12001 4.27001 6.95001C8.35001 5.71001 15.03 5.94001 19.23 8.43001C19.72 8.72001 19.88 9.35001 19.59 9.84001C19.3 10.33 18.67 10.49 18.18 10.2L18.01 10.27Z"/>
+                            </svg>
+                        </a>
+                    </div>
                 `;
             });
             

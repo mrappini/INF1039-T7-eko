@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from integracao_spotify import buscar_album, buscar_album_por_id
-
+import user_data_management
 app = Flask(__name__)
 
 # ------------- rotas aqui -------------
@@ -25,6 +25,8 @@ def busca():
 def minhas_avaliacoes():
     return render_template("profile.html")
 
+#@app.route("/avaliacao/<album_id>/enviar_avaliacao", methods=["POST"])
+#def enviar_avaliacao(album_id):
 
 
 @app.route("/avaliacao/<album_id>")

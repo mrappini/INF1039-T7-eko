@@ -344,27 +344,30 @@
 
 
         <section class="reviews">
-            <h2>Reviews (3)</h2>
-            
-            <div class="review-item">
-                <div class="review-header">
-                    <div class="user-avatar">👤</div>
-                    <div class="review-info">
-                        <div class="review-top">
-                            <span class="username">Fulano1</span>
-                            <span class="rating-badge">9.4</span>
-                            <span class="timestamp">1 semana atrás</span>
-                        </div>
-                        <p class="review-text">Currents é uma obra-prima da música psicodélica moderna.</p>
-                        <div class="review-actions">
-                            <span class="likes">234 Likes</span>
-                            <button>Responder</button>
-                            <button>Reportar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <h2>Avaliações</h2>
+
+            <form id="formReview" style="margin-bottom: 30px;">
+                <input type="hidden" name="album_id" value="{{ album.id }}">
+
+                <label style="display:block; margin-bottom:5px;">Seu nome:</label>
+                <input type="text" name="user" required style="width:100%; padding:10px; margin-bottom:15px;">
+
+                <label style="display:block; margin-bottom:5px;">Nota (0.0 a 10.0):</label>
+                <input type="number" step="0.1" min="0" max="10" name="rating" required
+                    style="width:100%; padding:10px; margin-bottom:15px;">
+
+                <label style="display:block; margin-bottom:5px;">Comentário:</label>
+                <textarea name="comentario" rows="4"
+                        style="width:100%; padding:10px; margin-bottom:15px;"></textarea>
+
+                <button type="submit" class="load-more" style="background:#FF6E1A;">
+                    Enviar avaliação
+                </button>
+            </form>
+
+            <div id="reviews"></div>
         </section>
+
 
         <section class="similar-albums card" style="background: transparent; border: none;">
             <p style="color: #666;">(Recomendações em breve)</p>

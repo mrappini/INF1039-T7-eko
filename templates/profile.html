@@ -1,255 +1,184 @@
 {% extends "base.html" %}
 
-{% block title %}eko - página inicial{% endblock %}
+{% block title %}Perfil de {{ nome }}{% endblock %}
 
-{% block body_class %}class="body-homepage"{% endblock %}
+{% block body_class %}class="body-profile"{% endblock %}
 
 {% block content %}
-<!DOCTYPE html><!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Ekko - Perfil</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Prompt', sans-serif;
-            background-color: #1F1F23;
-            color: #EDEDED;
-            padding: 40px 20px;
-        }
-        .profile-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        /* Profile Header */
-        .profile-header {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-            margin-bottom: 40px;
-            background-color: #2C2C30;
-            padding: 30px;
-            border-radius: 8px;
-        }
-        .profile-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background-color: #333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            flex-shrink: 0;
-            border: 3px solid #FF6E1A;
-        }
-        .profile-info {
-            flex: 1;
-        }
-        .profile-name {
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .profile-stats {
-            display: flex;
-            gap: 30px;
-            margin-top: 15px;
-            font-size: 14px;
-        }
-        .profile-stat {
-            display: flex;
-            flex-direction: column;
-        }
-        .stat-number {
-            font-size: 24px;
-            font-weight: bold;
-            color: #FF6E1A;
-        }
-        .stat-label {
-            color: #999;
-        }
-        
-        /* Rated Albums Section */
-        .rated-albums-section {
-            background-color: #2C2C30;
-            padding: 30px;
-            border-radius: 8px;
-        }
-        .section-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 30px;
-            color: #EDEDED;
-        }
-        .albums-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 20px;
-        }
-        .album-card {
-            cursor: pointer;
-        }
-        .album-card-cover {
-            position: relative;
-            margin-bottom: 8px;
-        }
-        .album-card-cover img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 4px;
-        }
-        .user-album-rating {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            background-color: #FF6E1A;
-            color: #000;
-            padding: 6px 10px;
-            border-radius: 50%;
-            font-size: 13px;
-            font-weight: bold;
-        }
-        .album-card-title {
-            font-weight: bold;
-            font-size: 14px;
-            margin-bottom: 3px;
-            color: #EDEDED;
-        }
-        .album-card-artist {
-            font-size: 12px;
-            color: #b0b0b0;
-        }
-    </style>
-</head>
-<body>
-    <div class="profile-container">
-        <!-- Profile Header -->
-        <div class="profile-header">
-            <div class="profile-avatar">👤</div>
-            <div class="profile-info">
-                <h1 class="profile-name">Nome do Usuário</h1>
-                <div class="profile-stats">
-                    <div class="profile-stat">
-                        <span class="stat-number">47</span>
-                        <span class="stat-label">Álbuns avaliados</span>
-                    </div>
-                    <div class="profile-stat">
-                        <span class="stat-number">23</span>
-                        <span class="stat-label">Reviews</span>
-                    </div>
-                    <div class="profile-stat">
-                        <span class="stat-number">8.5</span>
-                        <span class="stat-label">Nota média</span>
-                    </div>
+<style>
+    /* Mantive seu CSS, só ajustei para funcionar dentro do bloco */
+    .profile-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding-top: 40px;
+    }
+    
+    /* Profile Header */
+    .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        margin-bottom: 40px;
+        background-color: #2C2C30;
+        padding: 30px;
+        border-radius: 8px;
+    }
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background-color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        flex-shrink: 0;
+        border: 3px solid #FF6E1A;
+    }
+    .profile-info {
+        flex: 1;
+    }
+    .profile-name {
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #EDEDED;
+    }
+    .profile-stats {
+        display: flex;
+        gap: 30px;
+        margin-top: 15px;
+        font-size: 14px;
+    }
+    .profile-stat {
+        display: flex;
+        flex-direction: column;
+    }
+    .stat-number {
+        font-size: 24px;
+        font-weight: bold;
+        color: #FF6E1A;
+    }
+    .stat-label {
+        color: #999;
+    }
+    
+    /* Rated Albums Section */
+    .rated-albums-section {
+        background-color: #2C2C30;
+        padding: 30px;
+        border-radius: 8px;
+    }
+    .section-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 30px;
+        color: #EDEDED;
+    }
+    .albums-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 20px;
+    }
+    .album-card {
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    .album-card:hover {
+        transform: scale(1.02);
+    }
+    .album-card-cover {
+        position: relative;
+        margin-bottom: 8px;
+    }
+    .album-card-cover img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 4px;
+        aspect-ratio: 1/1; /* Garante que a capa fique quadrada */
+        object-fit: cover;
+    }
+    .user-album-rating {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        background-color: #FF6E1A;
+        color: #000;
+        padding: 4px 8px;
+        border-radius: 50%;
+        font-size: 13px;
+        font-weight: bold;
+        min-width: 30px;
+        text-align: center;
+    }
+    .album-card-title {
+        font-weight: bold;
+        font-size: 14px;
+        margin-bottom: 3px;
+        color: #EDEDED;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis; /* Corta nomes muito longos */
+    }
+    .album-card-artist {
+        font-size: 12px;
+        color: #b0b0b0;
+    }
+    .empty-state {
+        color: #999;
+        text-align: center;
+        padding: 40px;
+    }
+</style>
+
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="profile-avatar">👤</div>
+        <div class="profile-info">
+            <h1 class="profile-name">{{ nome }}</h1>
+            
+            <div class="profile-stats">
+                <div class="profile-stat">
+                    <span class="stat-number">{{ total }}</span>
+                    <span class="stat-label">Álbuns avaliados</span>
                 </div>
-            </div>
-        </div>
-
-        <!-- Rated Albums -->
-        <div class="rated-albums-section">
-            <h2 class="section-title">Álbuns recentes avaliados</h2>
-            <div class="albums-grid">
-
-                <div class="album-card">
-                    <div class="album-card-cover">
-                        <img src="https://upload.wikimedia.org/wikipedia/pt/2/2d/Currents_Tame_Impala.png" alt="Currents">
-                        <span class="user-album-rating">8.8</span>
-                    </div>
-                    <div class="album-card-info">
-                        <div class="album-card-title">Currents</div>
-                        <div class="album-card-artist">Tame Impala</div>
-                    </div>
-                </div>
-
-                <div class="album-card">
-                    <div class="album-card-cover">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/3/31/Tame_Impala_-_Lonerism.png" alt="Lonerism">
-                        <span class="user-album-rating">8.0</span>
-                    </div>
-                    <div class="album-card-info">
-                        <div class="album-card-title">Lonerism</div>
-                        <div class="album-card-artist">Tame Impala</div>
-                    </div>
-                </div>
-
-                <div class="album-card">
-                    <div class="album-card-cover">
-                        <img src="https://upload.wikimedia.org/wikipedia/pt/c/c1/The_Weeknd_-_After_Hours.png" alt="After Hours">
-                        <span class="user-album-rating">6.5</span>
-                    </div>
-                    <div class="album-card-info">
-                        <div class="album-card-title">After Hours</div>
-                        <div class="album-card-artist">The Weeknd</div>
-                    </div>
-                </div>
-
-                <div class="album-card">
-                    <div class="album-card-cover">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/In_Colour_%28Jamie_xx_album%29_album_cover.svg" alt="In Colour">
-                        <span class="user-album-rating">8.4</span>
-                    </div>
-                    <div class="album-card-info">
-                        <div class="album-card-title">In Colour</div>
-                        <div class="album-card-artist">Jamie xx</div>
-                    </div>
-                </div>
-
-                <div class="album-card">
-                    <div class="album-card-cover">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/3/39/MGMT_-_Congratulations.png/250px-MGMT_-_Congratulations.png" alt="Congratulations">
-                        <span class="user-album-rating">7.8</span>
-                    </div>
-                    <div class="album-card-info">
-                        <div class="album-card-title">Congratulations</div>
-                        <div class="album-card-artist">MGMT</div>
-                    </div>
-                </div>
-
-                <div class="album-card">
-                    <div class="album-card-cover">
-                        <img src="https://upload.wikimedia.org/wikipedia/pt/7/71/Sour_-_Olivia_Rodrigo.png" alt="SOUR">
-                        <span class="user-album-rating">7.0</span>
-                    </div>
-                    <div class="album-card-info">
-                        <div class="album-card-title">SOUR</div>
-                        <div class="album-card-artist">Olivia Rodrigo</div>
-                    </div>
-                </div>
-
-                <div class="album-card">
-                    <div class="album-card-cover">
-                        <img src="https://upload.wikimedia.org/wikipedia/pt/b/b2/Songs_in_the_Key_of_Life.jpg" alt="Stevie Wonder">
-                        <span class="user-album-rating">9.5</span>
-                    </div>
-                    <div class="album-card-info">
-                        <div class="album-card-title">Songs in the Key of Life</div>
-                        <div class="album-card-artist">Stevie Wonder</div>
-                    </div>
-                </div>
-
-                <div class="album-card">
-                    <div class="album-card-cover">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Charli_XCX_-_Brat_%28album_cover%29.svg/2048px-Charli_XCX_-_Brat_%28album_cover%29.svg.png" alt="Test Album">
-                        <span class="user-album-rating">5.0</span>
-                    </div>
-                    <div class="album-card-info">
-                        <div class="album-card-title">Brat</div>
-                        <div class="album-card-artist">Charli XCX</div>
-                    </div>
+                <div class="profile-stat">
+                    <span class="stat-number">{{ media }}</span>
+                    <span class="stat-label">Nota média</span>
                 </div>
             </div>
         </div>
     </div>
-</body>
-</html>
+
+    <div class="rated-albums-section">
+        <h2 class="section-title">Álbuns recentes avaliados</h2>
+        
+        <div class="albums-grid">
+            
+            {% if reviews %}
+                {% for review in reviews %}
+                <div class="album-card">
+                    <a href="{{ url_for('avaliacao_album', album_id=review.spotify_id) }}" style="text-decoration: none;">
+                        <div class="album-card-cover">
+                            <img src="{{ review.capa_url }}" alt="{{ review.titulo }}">
+                            <span class="user-album-rating">{{ review.nota }}</span>
+                        </div>
+                        <div class="album-card-info">
+                            <div class="album-card-title">{{ review.titulo }}</div>
+                            <div class="album-card-artist">{{ review.artista }}</div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state" style="grid-column: 1 / -1;">
+                    <p>Você ainda não avaliou nenhum álbum.</p>
+                    <a href="{{ url_for('busca') }}" class="btn btn-primary" style="background-color: #FF6E1A; border: none; margin-top: 10px;">Avaliar agora</a>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
 {% endblock %}

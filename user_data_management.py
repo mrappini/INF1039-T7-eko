@@ -140,6 +140,18 @@ def ler_avaliacoes_do_album(spotify_id):
     return conn.execute(query).fetchall()
 
 
+
+def ler_avaliacoes_do_usuario(email_usuario):
+    """Retorna todas as avaliações de um usuário específico + dados do álbum"""
+    
+    # Fazemos um JOIN entre Avaliacoes e Albuns
+    query = db.select(Avaliacoes, Albuns).join(
+        Albuns, Avaliacoes.c.album_id == Albuns.c.id
+    ).where(Avaliacoes.c.user_email == email_usuario)
+    
+    result = conn.execute(query).fetchall()
+    return result
+
 # simula um login (precisa de um usuário real no banco)
 usuario_atual = "pedro@gmail.com" 
 

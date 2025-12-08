@@ -81,7 +81,7 @@
         .album-info p { margin: 0; color: #AAA; font-size: 0.9rem; }
         .spotify-icon { width: 28px; height: 28px; color: #1DB954; margin-left: 10px; }
         
-        /* Sugestões COM IMAGENS - NOVO ESTILO */
+        /* Sugestões APENAS ARTISTAS - NOVO ESTILO */
         .popular-list { 
             list-style: none; 
             padding: 0; 
@@ -111,10 +111,11 @@
         .popular-img {
             width: 60px;
             height: 60px;
-            border-radius: 6px;
+            border-radius: 50%; /* Circular para artistas */
             object-fit: cover;
             margin-right: 15px;
             flex-shrink: 0;
+            background-color: #444;
         }
         
         .popular-content {
@@ -199,46 +200,38 @@
                 <h6 class="text-white mb-3">você também pode gostar...</h6>
                 <ul class="popular-list">
                     <li>
-                        <a href="/avaliacao/3mH6qwIy9crq0I9YQbOuDf" class="popular-item">
-                            <img src="https://i.scdn.co/image/ab67616d0000b273c5649add07ed3720be9d5526" 
-                                 alt="Blonde" class="popular-img">
+                        <a href="#" onclick="testeBusca('Frank Ocean'); return false;" class="popular-item">
+                            <img src="https://i.scdn.co/image/ab6761610000e5ebc36dd9eb55fb0db4911f25dd" 
+                                 alt="Frank Ocean" class="popular-img"
+                                 onerror="this.src='https://via.placeholder.com/60/444/888?text=FO'">
                             <div class="popular-content">
-                                <div class="popular-name">Blonde</div>
-                                <div class="popular-type">Álbum</div>
-                                <div class="popular-description">Frank Ocean · 2016</div>
+                                <div class="popular-name">Frank Ocean</div>
+                                <div class="popular-type">Artista</div>
+                                <div class="popular-description">R&B alternativo, neo soul</div>
                             </div>
                         </a>
                     </li>
                     <li>
-                        <a href="/avaliacao/3tx8gQqWbGwqIGZHqDNrGe" class="popular-item">
-                            <img src="https://i.scdn.co/image/ab67616d0000b273e86c128f6027c49b6d85915d" 
-                                 alt="Sweetener" class="popular-img">
+                        <a href="#" onclick="testeBusca('Taylor Swift'); return false;" class="popular-item">
+                            <img src="https://i.scdn.co/image/ab6761610000e5eb5a00969a4698c3132a15fbb0" 
+                                 alt="Taylor Swift" class="popular-img"
+                                 onerror="this.src='https://via.placeholder.com/60/444/888?text=TS'">
                             <div class="popular-content">
-                                <div class="popular-name">Sweetener</div>
-                                <div class="popular-type">Álbum</div>
-                                <div class="popular-description">Ariana Grande · 2018</div>
+                                <div class="popular-name">Taylor Swift</div>
+                                <div class="popular-type">Artista</div>
+                                <div class="popular-description">Pop, country, indie</div>
                             </div>
                         </a>
                     </li>
                     <li>
-                        <a href="/avaliacao/4LH4d3cOWNNsVw41Gqt2kv" class="popular-item">
-                            <img src="https://i.scdn.co/image/ab67616d0000b273ea7caaff71dea1051d49b2fe" 
-                                 alt="Pink Floyd" class="popular-img">
+                        <a href="#" onclick="testeBusca('Arctic Monkeys'); return false;" class="popular-item">
+                            <img src="https://i.scdn.co/image/ab6761610000e5eb7da39dea0a72f581535fb11f" 
+                                 alt="Arctic Monkeys" class="popular-img"
+                                 onerror="this.src='https://via.placeholder.com/60/444/888?text=AM'">
                             <div class="popular-content">
-                                <div class="popular-name">The Dark Side of the Moon</div>
-                                <div class="popular-type">Álbum</div>
-                                <div class="popular-description">Pink Floyd · 1973</div>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/avaliacao/3FABrAjUCJuq6JOyoQKQ35" class="popular-item">
-                            <img src="https://i.scdn.co/image/ab67616d0000b2731e9c8052b618f3a39e83344d" 
-                                 alt="Bad" class="popular-img">
-                            <div class="popular-content">
-                                <div class="popular-name">Bad</div>
-                                <div class="popular-type">Álbum</div>
-                                <div class="popular-description">Michael Jackson · 1987</div>
+                                <div class="popular-name">Arctic Monkeys</div>
+                                <div class="popular-type">Artista</div>
+                                <div class="popular-description">Indie rock, garage rock</div>
                             </div>
                         </a>
                     </li>
@@ -246,6 +239,7 @@
             </div>
         </div>
     </div>
+
 
     <footer class="text-center text-white-50 p-3 bg-eko-dark border-eko-footer mt-5">
         <p class="mb-1 text-white-50 small">
@@ -299,7 +293,7 @@
 
                     const html = `
                         <a href="/avaliacao/${id}" class="album-result">
-                            <img src="${imagem}" class="album-img">
+                            <img src="${imagem}" class="album-img" onerror="this.src='https://via.placeholder.com/80/2A2A30/888?text=Album'">
                             <div class="album-info flex-grow-1">
                                 <h3>${nome}</h3>
                                 <p>${artista}</p>

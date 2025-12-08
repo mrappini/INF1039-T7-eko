@@ -81,13 +81,66 @@
         .album-info p { margin: 0; color: #AAA; font-size: 0.9rem; }
         .spotify-icon { width: 28px; height: 28px; color: #1DB954; margin-left: 10px; }
         
-        /* Sugestões */
-        .popular-list { list-style: none; padding: 0; }
-        .popular-list a {
-            display: block; padding: 1rem; background-color: #2F2F2F; color: #FFF;
-            margin-bottom: 0.5rem; border-radius: 8px; text-decoration: none;
+        /* Sugestões COM IMAGENS - NOVO ESTILO */
+        .popular-list { 
+            list-style: none; 
+            padding: 0; 
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
         }
-        .popular-list a:hover { background-color: #3A3A3A; }
+        
+        .popular-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background-color: #2F2F2F;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #FFF;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+        
+        .popular-item:hover {
+            background-color: #3A3A3A;
+            border-color: var(--eko-orange);
+            transform: translateY(-2px);
+        }
+        
+        .popular-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 6px;
+            object-fit: cover;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .popular-content {
+            flex: 1;
+        }
+        
+        .popular-name {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 3px;
+            color: #FFF;
+        }
+        
+        .popular-type {
+            font-size: 0.85rem;
+            color: var(--eko-orange);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        
+        .popular-description {
+            font-size: 0.9rem;
+            color: #AAA;
+            margin-top: 3px;
+        }
     </style>
 </head>
 <body>
@@ -145,15 +198,54 @@
             <div class="text-start">
                 <h6 class="text-white mb-3">você também pode gostar...</h6>
                 <ul class="popular-list">
-                    <li><a href="#" onclick="testeBusca('Frank Ocean'); return false;">Frank Ocean (Artista)</a></li>
-                    <li><a href="#" onclick="testeBusca('Short n Sweet'); return false;">Short n' Sweet (Álbum)</a></li>
-                    <li><a href="#" onclick="testeBusca('Pink Floyd'); return false;">Pink Floyd (Artista)</a></li>
-                    <li><a href="#" onclick="testeBusca('Thriller'); return false;">Thriller (Álbum)</a></li>
+                    <li>
+                        <a href="/avaliacao/3mH6qwIy9crq0I9YQbOuDf" class="popular-item">
+                            <img src="https://i.scdn.co/image/ab67616d0000b273c5649add07ed3720be9d5526" 
+                                 alt="Blonde" class="popular-img">
+                            <div class="popular-content">
+                                <div class="popular-name">Blonde</div>
+                                <div class="popular-type">Álbum</div>
+                                <div class="popular-description">Frank Ocean · 2016</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/avaliacao/3tx8gQqWbGwqIGZHqDNrGe" class="popular-item">
+                            <img src="https://i.scdn.co/image/ab67616d0000b273e86c128f6027c49b6d85915d" 
+                                 alt="Sweetener" class="popular-img">
+                            <div class="popular-content">
+                                <div class="popular-name">Sweetener</div>
+                                <div class="popular-type">Álbum</div>
+                                <div class="popular-description">Ariana Grande · 2018</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/avaliacao/4LH4d3cOWNNsVw41Gqt2kv" class="popular-item">
+                            <img src="https://i.scdn.co/image/ab67616d0000b273ea7caaff71dea1051d49b2fe" 
+                                 alt="Pink Floyd" class="popular-img">
+                            <div class="popular-content">
+                                <div class="popular-name">The Dark Side of the Moon</div>
+                                <div class="popular-type">Álbum</div>
+                                <div class="popular-description">Pink Floyd · 1973</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/avaliacao/3FABrAjUCJuq6JOyoQKQ35" class="popular-item">
+                            <img src="https://i.scdn.co/image/ab67616d0000b2731e9c8052b618f3a39e83344d" 
+                                 alt="Bad" class="popular-img">
+                            <div class="popular-content">
+                                <div class="popular-name">Bad</div>
+                                <div class="popular-type">Álbum</div>
+                                <div class="popular-description">Michael Jackson · 1987</div>
+                            </div>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
-
 
     <footer class="text-center text-white-50 p-3 bg-eko-dark border-eko-footer mt-5">
         <p class="mb-1 text-white-50 small">

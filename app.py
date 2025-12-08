@@ -1,51 +1,27 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
 from integracao_spotify import buscar_album, buscar_album_por_id
-import user_data_management as db # Apelidei seu arquivo de banco para 'db'
+import user_data_management as db 
 
 app = Flask(__name__)
-
-# Configuração da Sessão (Obrigatório para login funcionar)
 app.secret_key = "chave_super_secreta_do_eko" 
 
-# # ------------- rotas aqui -------------
-
-# # --- MODO DESENVOLVEDOR: AUTO-LOGIN ---
-# # Defina aqui o email que você quer usar para testes
-# USUARIO_TESTE_EMAIL = "seu_email_real_do_banco@gmail.com" 
-# USUARIO_TESTE_NOME = "Dev Mode"
-
-# @app.before_request
-# def auto_login_teste():
-#     """
-#     Se estiver rodando em modo debug (local) e não tiver ninguém logado,
-#     força o login do usuário de teste.
-#     """
-#     if app.debug: # Só roda se o debug=True (que é o padrão quando vc roda local)
-#         if 'usuario_email' not in session:
-#             print(f"--- [DEV] Logando automaticamente como {USUARIO_TESTE_NOME} ---")
-#             session['usuario_email'] = USUARIO_TESTE_EMAIL
-#             session['usuario_nome'] = USUARIO_TESTE_NOME
-# # ---------------------------------------
+# --- ROTAS PRINCIPAIS ---
 
 @app.route('/')
 def homepage():
-    # Se o usuário estiver logado, passamos o nome dele para o template
     usuario_logado = session.get('usuario_nome')
     return render_template('homepage.html', usuario=usuario_logado)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form.get('email_login') # O 'name' no HTML deve ser email_login
-        senha = request.form.get('senha_login') # O 'name' no HTML deve ser senha_login
-        
-        # Chama a função do seu arquivo de banco
+        email = request.form.get('email_login')
+        senha = request.form.get('senha_login')
         status = db.login_match(email, senha)
         
         if status == 200:
-            # Pega os dados do usuário para salvar na sessão
             dados_user = db.get_user(email)
-            # dados_user[0] = email, dados_user[1] = nome
+            # dados_user[0]=email, dados_user[1]=nome
             session['usuario_email'] = dados_user[0]
             session['usuario_nome'] = dados_user[1]
             return redirect(url_for('homepage'))
@@ -62,21 +38,18 @@ def cadastro():
         usuario = request.form.get('usuario')
         email = request.form.get('email')
         senha = request.form.get('senha')
-        
-        # Chama a função de criar usuário
         resultado = db.new_user(email, usuario, senha)
         
         if resultado == "exists":
             flash("Esse email já está cadastrado.")
         else:
             flash("Conta criada com sucesso! Faça login.")
-            return redirect(url_for('login'))
-            
+            return redirect(url_for('login'))     
     return render_template('cadastro.html')
 
 @app.route('/logout')
 def logout():
-    session.clear() # Limpa a sessão (desloga)
+    session.clear()
     return redirect(url_for('login'))
 
 @app.route('/busca')
@@ -85,93 +58,108 @@ def busca():
 
 @app.route("/minhas_avaliacoes")
 def minhas_avaliacoes():
-    # 1. Verifica se está logado
     if 'usuario_email' not in session:
         return redirect(url_for('login'))
     
     email = session['usuario_email']
     nome = session['usuario_nome']
     
-    # 2. Busca as reviews no banco
     reviews = db.ler_avaliacoes_do_usuario(email)
     
-    # 3. Calcula as estatísticas
     total_reviews = len(reviews)
-    
     media_notas = 0
     if total_reviews > 0:
-        soma_notas = sum([linha.nota for linha in reviews]) # Soma todas as notas
-        media_notas = round(soma_notas / total_reviews, 1) # Divide e arredonda
+        soma_notas = sum([linha.nota for linha in reviews])
+        media_notas = round(soma_notas / total_reviews, 1)
         
-    # 4. Renderiza o template mandando os dados
-    return render_template("profile.html", 
-                           nome=nome, 
-                           reviews=reviews, 
-                           total=total_reviews, 
-                           media=media_notas)
+    return render_template("profile.html", nome=nome, reviews=reviews, total=total_reviews, media=media_notas)
+
+# --- ROTAS DE AVALIAÇÃO (aqui deu problema d+) ---
 
 @app.route("/avaliacao/<album_id>")
 def avaliacao_album(album_id):
-    # Verifica se está logado antes de deixar avaliar
+    # só deixa ver a página se estiver logado (senão redireciona pro login)
     if 'usuario_email' not in session:
-        flash("Você precisa estar logado para avaliar.")
+        flash("Faça login para ver avaliações.")
         return redirect(url_for('login'))
 
     album, tracks = buscar_album_por_id(album_id)
     
     if album is None:
         return render_template("erro.html", mensagem="Álbum não encontrado"), 404
-        
-    return render_template("avaliacao.html", album=album, tracks=tracks)
+    
+    # busca as reviews desse álbum no banco para exibir na página
+    reviews_do_album = db.ler_avaliacoes_do_album(album_id)
 
-# --- Rota para PROCESSAR o envio da avaliação ---
+    return render_template("avaliacao.html", album=album, tracks=tracks, reviews=reviews_do_album)
+
+# ...
 @app.route("/avaliacao/<album_id>/enviar", methods=["POST"])
 def enviar_avaliacao(album_id):
     if 'usuario_email' not in session:
         return redirect(url_for('login'))
     
-    # 1. Recupera dados do formulário
-    nota = request.form.get('nota')
+    # pega a nota e garante que é decimal
+    nota = request.form.get('rating') 
     comentario = request.form.get('comentario')
     
-    # 2. Precisamos dos dados do álbum para salvar no banco (Nome, Artista, Capa)
-    # Vamos buscar de novo no Spotify usando o ID para garantir que os dados estão certos
+    if not nota: nota = 0.0
+    
+    # busca dados do álbum
     album, _ = buscar_album_por_id(album_id)
     
     if not album:
-        return "Erro ao recuperar dados do álbum", 404
+        return "Erro: Álbum não encontrado", 404
 
-    # 3. Chama sua função do banco de dados
     user_email = session['usuario_email']
     
     try:
+        #SEMPRE USA NOME, NADA DE NAME, ESTAMOS NO BRASIL
+        nome_album = album.get('nome') or album.get('name')
+        
+        # tenta pegar artista de várias formas possíveis (lista ou string)
+        artista_album = "Desconhecido"
+        if 'artists' in album: # se for estrutura bruta do Spotify
+             artista_album = album['artists'][0]['name']
+        elif 'artista' in album: # se for estrutura tratada eko
+             artista_album = album['artista']
+             
+        # msm coisa pra imagem
+        capa_album = ""
+        if 'images' in album:
+            capa_album = album['images'][0]['url']
+        elif 'imagem' in album:
+            capa_album = album['imagem']
+
         db.nova_avaliacao(
             user_email=user_email,
             spotify_id=album_id,
-            nome_album=album['name'],     # Ajuste conforme a chave do seu dicionário do Spotify
-            artista_album=album['artists'][0]['name'], # Pega o primeiro artista
-            capa_album=album['images'][0]['url'],      # Pega a url da imagem
-            nota=int(nota),
+            nome_album=nome_album,
+            artista_album=artista_album,
+            capa_album=capa_album,
+            nota=float(nota),
             comentario=comentario
         )
-        flash("Avaliação salva com sucesso!")
-        return redirect(url_for('minhas_avaliacoes'))
+        flash("Avaliação enviada!")
+        return redirect(url_for('avaliacao_album', album_id=album_id))
+        
     except Exception as e:
-        print(f"Erro ao salvar: {e}")
-        return "Houve um erro ao salvar sua avaliação."
-
-# --- rota da API (jsoN) ---
+        #isso aq é só pra ver no terminal msm, coisa de teste
+        print(f"ERRO GRAVE AO SALVAR: {e}") 
+        return f"Erro interno: {e}" # mostra na tela também pra facilitar
+# ...
+# --- API ---
 @app.route('/api/buscar_album', methods=['POST'])
 def api_buscar_album():
     termo = request.form.get('query')
     if not termo:
-        return jsonify({'erro': 'O termo de busca é obrigatório'}), 400
+        return jsonify({'erro': 'Termo vazio'}), 400
     try:
         resultados = buscar_album(termo)
         return jsonify(resultados)
     except Exception as e:
-        print(f"Erro na rota API: {e}")
-        return jsonify({'erro': 'Erro interno ao buscar álbum'}), 500
+        print(e)
+        return jsonify({'erro': 'Erro interno'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

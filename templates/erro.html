@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Erro - eko{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <div style="background-color: #2A2A30; padding: 40px; border-radius: 12px; max-width: 600px; margin: 0 auto; border: 1px solid #FF6E1A;">
+        <h1 style="color: #FF6E1A; margin-bottom: 20px;">Ops!</h1>
+        <p style="font-size: 1.2rem; color: #EDEDED; margin-bottom: 30px;">
+            {{ mensagem or "Ocorreu um erro inesperado." }}
+        </p>
+        
+        <a href="{{ url_for('busca') }}" class="btn-eko btn-lg" style="text-decoration: none; padding: 10px 30px; border-radius: 8px;">
+            Voltar para a Busca
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,178 +1,170 @@
 import sqlalchemy as db
 from sqlalchemy import text
 import hashlib
-#import random
 import secrets
-engine = db.create_engine("sqlite:///login.sqlite")
-#bad= ["SELECT", "DROP","DELETE","INSERT","CREATE","ALTER","GRANT","REVOKE","*","WHERE"]
-conn = engine.connect() 
 
+engine = db.create_engine("sqlite:///login.sqlite")
 metadata = db.MetaData()
 
-#conn.execute(text("DROP TABLE Usuario"))
+# --- DEFINIÇÃO DAS TABELAS ---
+
 Entrada = db.Table('Usuario', metadata,
-              db.Column('Email', db.String(255),primary_key=True),
-               db.Column('Usuario', db.String(255),nullable=False),
-              db.Column('Senha', db.String(255), nullable=False),
-               db.Column('Uid', db.String(255),nullable=False),
-             
-              )
+      db.Column('Email', db.String(255), primary_key=True),
+      db.Column('Usuario', db.String(255), nullable=False),
+      db.Column('Senha', db.String(255), nullable=False),
+      db.Column('Uid', db.String(255), nullable=False),
+)
 
-
-# tabela de Álbuns (para não repetir nome/capa toda hora)
 Albuns = db.Table('Albuns', metadata,
     db.Column('id', db.Integer, primary_key=True, autoincrement=True),
-    db.Column('spotify_id', db.String(50), unique=True, nullable=False), # ID do Spotify
+    db.Column('spotify_id', db.String(50), unique=True, nullable=False),
     db.Column('titulo', db.String(150), nullable=False),
     db.Column('artista', db.String(150), nullable=False),
     db.Column('capa_url', db.String(300))
 )
 
-# tabela de Avaliações
 Avaliacoes = db.Table('Avaliacoes', metadata,
     db.Column('id', db.Integer, primary_key=True, autoincrement=True),
-    db.Column('nota', db.Integer, nullable=False),
+    db.Column('nota', db.Float, nullable=False), 
     db.Column('comentario', db.Text, nullable=True),
-    # pega a data/hora atual automaticamente
-    db.Column('data', db.DateTime, default=db.func.now()), 
-    
-    # CHAVE ESTRANGEIRA AQUI
-    # faz a ligação da avaliação ao Email do usuário (que é a Primary Key na tabela Usuario)
+    # o server default garante que o banco preencha a data se o python não fizer auto
+    db.Column('data', db.DateTime, server_default=db.func.now()), 
     db.Column('user_email', db.String(255), db.ForeignKey('Usuario.Email'), nullable=False),
-    # faz a ligação da avaliação ao ID interno do álbum
     db.Column('album_id', db.Integer, db.ForeignKey('Albuns.id'), nullable=False)
 )
 
 metadata.create_all(engine) 
 
-def sha512(inp: str): return(hashlib.sha512(inp.encode()).hexdigest())
-"""
-def sanitize(inp: str,filter):
-    for item in filter:
-        inp = inp.removeprefix(item)
-        inp = inp.removesuffix(item)
-    return inp
-"""
+# --- FUNÇÕES AUXILIARES ---
+
+def sha512(inp: str): 
+    return hashlib.sha512(inp.encode()).hexdigest()
+
+# --- FUNÇÕES DE USUÁRIO (meu eko e afins) ---
 
 def get_user(email):
-    getuser = db.select(Entrada).where(Entrada.c.Email == email)
-    return(conn.execute(getuser).fetchone())
+    with engine.connect() as conn:
+        query = db.select(Entrada).where(Entrada.c.Email == email)
+        return conn.execute(query).fetchone()
 
-def login_match(email,senha):
+def login_match(email, senha):
     user_entry = get_user(email)
-    if user_entry==None: return 404
-    if sha512(senha)!=user_entry[2]: return 403
+    if user_entry is None: return 404
+    if sha512(senha) != user_entry.Senha: return 403
     return 200
 
+def new_user(email, usuario, senha):
+    if get_user(email) is not None: return "exists"
+    
+    with engine.connect() as conn:
+        register = db.insert(Entrada).values(
+            Email=email, 
+            Usuario=usuario, 
+            Senha=sha512(senha),
+            Uid=secrets.token_bytes(20).hex()
+        )
+        result = conn.execute(register)
+        conn.commit()
+        return result.rowcount
 
-
-def new_user(email,usuario,senha):
-    user_entry = get_user(email)
-    print(user_entry)
-    if user_entry !=None: return "exists"
-    register = db.insert(Entrada).values(Email=email, Usuario=usuario, Senha=sha512(senha),Uid=secrets.token_bytes(20).hex())
-    Result = conn.execute(register)
-    conn.commit()
-    return Result.rowcount
-
-
+# --- FUNÇÕES DE ÁLBUNS E AVALIAÇÕES (aqui é importante tá) ---
 
 def get_album_id_by_spotify(spotify_id):
-    """busca o ID interno do álbum usando o ID do Spotify"""
-    query = db.select(Albuns.c.id).where(Albuns.c.spotify_id == spotify_id)
-    result = conn.execute(query).fetchone()
-    if result:
-        return result[0]
-    return None
+    """Busca o ID interno (número) usando o ID do Spotify (string)"""
+    with engine.connect() as conn:
+        query = db.select(Albuns.c.id).where(Albuns.c.spotify_id == spotify_id)
+        result = conn.execute(query).fetchone()
+        if result:
+            return result.id
+        return None
 
 def criar_album_se_nao_existir(spotify_id, titulo, artista, capa_url):
-    """
-    serifica se o álbum já está no banco. 
-    se não estiver, salva ele e retorna o novo ID.
-    se já estiver, só retorna o ID existente.
-    """
     existing_id = get_album_id_by_spotify(spotify_id)
     if existing_id:
         return existing_id
     
-    # se não existe, insere
-    ins = db.insert(Albuns).values(
-        spotify_id=spotify_id,
-        titulo=titulo,
-        artista=artista,
-        capa_url=capa_url
-    )
-    result = conn.execute(ins)
-    conn.commit()
-    return result.inserted_primary_key[0]
+    with engine.connect() as conn:
+        print(f"--- [DB] Criando novo álbum no banco: {titulo} ---")
+        ins = db.insert(Albuns).values(
+            spotify_id=spotify_id,
+            titulo=titulo,
+            artista=artista,
+            capa_url=capa_url
+        )
+        result = conn.execute(ins)
+        conn.commit()
+        return result.inserted_primary_key[0]
 
 def nova_avaliacao(user_email, spotify_id, nome_album, artista_album, capa_album, nota, comentario):
-    """
-    essa eh a função principal para salvar a avaliação.
-    1. garante que o álbum existe no banco.
-    2. salva a avaliação linkada ao usuário e ao álbum.
-    """
-    # etapa 1: pega o ID do álbum (criando se necessário)
+    #parte 1: garante que o álbum existe e pega o ID dele
     album_db_id = criar_album_se_nao_existir(spotify_id, nome_album, artista_album, capa_album)
     
-    # etapa 2: insere a avaliação
-    ins = db.insert(Avaliacoes).values(
-        user_email=user_email, # Quem avaliou
-        album_id=album_db_id,  # Qual álbum (ID interno)
-        nota=nota,
-        comentario=comentario
-    )
-    result = conn.execute(ins)
-    conn.commit()
-    return "Avaliação salva com sucesso!"
+    with engine.connect() as conn:
+        # antes de inserir, deleta qualquer avaliação que tenha O MESMO email E O MESMO álbum, sen uma mesma pessoa fica com varias
+        print(f"--- [DB] Removendo review anterior de {user_email} para o álbum {album_db_id} ---")
+        apagar_velha = db.delete(Avaliacoes).where(
+            (Avaliacoes.c.user_email == user_email) & 
+            (Avaliacoes.c.album_id == album_db_id)
+        )
+        conn.execute(apagar_velha)
+        
+        # --- PASSO PADRAO: INSERÇÃO ---
+        print(f"--- [DB] Salvando Nova Review | Nota: {nota} ---")
+        ins = db.insert(Avaliacoes).values(
+            user_email=user_email,
+            album_id=album_db_id,
+            nota=nota,
+            comentario=comentario
+        )
+        conn.execute(ins)
+        conn.commit()
+        
+    return "Avaliação atualizada com sucesso!"
 
 def ler_avaliacoes_do_album(spotify_id):
-    """isso vai retornar todas as avaliações de um álbum específico"""
+    print(f"--- [DB] Buscando reviews para Spotify ID: {spotify_id} ---")
+    
     album_id = get_album_id_by_spotify(spotify_id)
     if not album_id:
+        print("--- [DB] Álbum ainda não existe no banco (0 reviews) ---")
         return []
 
-    # faz um JOIN para pegar o nome do usuário junto com a avaliação
-    query = db.select(Avaliacoes, Entrada.c.Usuario).join(
-        Entrada, Avaliacoes.c.user_email == Entrada.c.Email
-    ).where(Avaliacoes.c.album_id == album_id)
-    
-    return conn.execute(query).fetchall()
+    with engine.connect() as conn:
+        # passo 1 debug: imprime TUDO que tem na tabela de avaliações para este álbum (sem filtro de usuário ainda)
+        check_query = db.select(Avaliacoes).where(Avaliacoes.c.album_id == album_id)
+        check_result = conn.execute(check_query).fetchall()
+        print(f"--- [DEBUG] Reviews brutas na tabela para este álbum: {len(check_result)} ---")
+        for r in check_result:
+            print(f"    -> Review ID: {r.id} | Nota: {r.nota} | Email: {r.user_email}")
 
+        # passo2 a Query Real (sgora usando OUTERJOIN para não esconder reviews se o usuário der erro)
+        # se o usuário não for encontrado, o nome virá como None, mas a review aparece.
+        query = db.select(Avaliacoes, Entrada.c.Usuario).outerjoin(
+            Entrada, Avaliacoes.c.user_email == Entrada.c.Email
+        ).where(Avaliacoes.c.album_id == album_id)
+        
+        resultados = conn.execute(query).fetchall()
+        
+        # tratamento para caso o usuário venha nulo (evita erro no HTML)
+        lista_final = []
+        for linha in resultados:
+            # linha é uma tupla.tem que garantir que tenha o campo Usuario acessível
+            # transformamos em um objeto simples para o template não encher o saco
+            r_dict = {
+                'id': linha.id,
+                'nota': linha.nota,
+                'comentario': linha.comentario,
+                'Usuario': linha.Usuario if linha.Usuario else "Usuário Desconhecido"
+            }
+            lista_final.append(r_dict)
 
+        print(f"--- [DB] Retornando {len(lista_final)} reviews para o site ---")
+        return lista_final
 
 def ler_avaliacoes_do_usuario(email_usuario):
-    """Retorna todas as avaliações de um usuário específico + dados do álbum"""
-    
-    # Fazemos um JOIN entre Avaliacoes e Albuns
-    query = db.select(Avaliacoes, Albuns).join(
-        Albuns, Avaliacoes.c.album_id == Albuns.c.id
-    ).where(Avaliacoes.c.user_email == email_usuario)
-    
-    result = conn.execute(query).fetchall()
-    return result
-
-# simula um login (precisa de um usuário real no banco)
-usuario_atual = "pedro@gmail.com" 
-
-# usuário avalia um álbum (ex: "Chromakopia")
-# esses dados virão da API do Spotify no  eko
-print("Salvando avaliação...")
-resultado = nova_avaliacao(
-    user_email=usuario_atual,
-    spotify_id="spotify_id_do_chromakopia_123", 
-    nome_album="Chromakopia",
-    artista_album="Tyler, The Creator",
-    capa_album="http://url_da_capa.jpg",
-    nota=5,
-    comentario="Álbum absurdo, muito bom!"
-)
-print(resultado)
-
-# 3. lê as avaliações desse álbum
-print("Lendo avaliações...")
-reviews = ler_avaliacoes_do_album("spotify_id_do_chromakopia_123")
-for review in reviews:
-    # review é uma tupla. O índice depende da ordem das colunas no select.
-    # baseado na query: (id_review, nota, comentario, data, email, id_album, NomeUsuario)
-    print(f"Usuário: {review[-1]} | Nota: {review[1]} | Comentário: {review[2]}")
+    with engine.connect() as conn:
+        query = db.select(Avaliacoes, Albuns).join(
+            Albuns, Avaliacoes.c.album_id == Albuns.c.id
+        ).where(Avaliacoes.c.user_email == email_usuario)
+        result = conn.execute(query).fetchall()
+        return result

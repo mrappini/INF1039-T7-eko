@@ -126,7 +126,7 @@
           </div>
 
           <a href="https://google.com" target="_blank" class="forgot-link">esqueci minha senha</a>
-
+           <button class="rounded-button" onclick="login()" id='login-button' style="background-color:#ff6e00;color:white">Login</button>
           <div class="d-grid">
             <button class="btn btn-primary" type="submit">entrar</button>
           </div>
@@ -146,6 +146,23 @@
   <p class="mb-0">© 2025 eko — trabalho de INF1039 — PUC-Rio.</p>
   <p class="mb-0 text-white-50 small">dados de música fornecidos por Spotify. Spotify® é uma marca registrada da Spotify AB.</p>
 </footer>
-
+ <script>
+        function login() {
+            const user_email = document.getElementById("caixa-email-usuario").value
+            const password_input = document.getElementById("caixa-senha").value
+            const jsObject = {"identifier":user_email,"password":password_input}
+            if (user_email.length <1 || password_input.length<1)
+            {
+                console.log("Email ou senha não podem estar vazios.")
+                return
+            }
+            
+            response = fetch('/api/login', {
+                method: 'POST',
+                body: JSON.stringify(jsObject)
+            }).then(response => response.json())
+            console.log(response)
+        }
+    </script>
 </body>
 </html>

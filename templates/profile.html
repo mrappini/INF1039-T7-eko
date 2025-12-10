@@ -154,15 +154,21 @@
     <div class="rated-albums-section">
         <h2 class="section-title">Álbuns recentes avaliados</h2>
         
-        <div class="albums-grid">
+<div class="albums-grid">
             
             {% if reviews %}
                 {% for review in reviews %}
+                
+                {% set cor = '#4caf50' if review.nota >= 7 else '#ff9800' if review.nota >= 5 else '#f44336' %}
+                
                 <div class="album-card">
                     <a href="{{ url_for('avaliacao_album', album_id=review.spotify_id) }}" style="text-decoration: none;">
                         <div class="album-card-cover">
                             <img src="{{ review.capa_url }}" alt="{{ review.titulo }}">
-                            <span class="user-album-rating">{{ review.nota }}</span>
+                            
+                            <span class="user-album-rating" style="background-color: {{ cor }}; color: white;">
+                                {{ review.nota }}
+                            </span>
                         </div>
                         <div class="album-card-info">
                             <div class="album-card-title">{{ review.titulo }}</div>

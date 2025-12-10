@@ -22,7 +22,6 @@ def login():
         
         if status == 200:
             dados_user = db.get_user(email)
-            # Salva apenas email e nome na sessão
             session['usuario_email'] = dados_user.Email
             session['usuario_nome'] = dados_user.Usuario
             return redirect(url_for('homepage'))
@@ -40,12 +39,9 @@ def cadastro():
         email = request.form.get('email')
         senha = request.form.get('senha')
         
-        # Chama a função de criar usuário (sem avatar)
-        # Se seu banco ainda pede 4 argumentos, avise que ajustamos
         try:
             resultado = db.new_user(email, usuario, senha)
         except TypeError:
-            # Caso o banco esteja esperando o avatar, passamos um padrão
             resultado = db.new_user(email, usuario, senha, "1.png")
         
         if resultado == "exists":
@@ -152,7 +148,6 @@ def enviar_avaliacao(album_id):
         return f"Erro interno: {e}"
 
 
-# No app.py, procure a rota deletar_avaliacao
 @app.route("/deletar/<int:review_id>")
 def deletar_avaliacao(review_id):
     if 'usuario_email' not in session:
@@ -160,7 +155,7 @@ def deletar_avaliacao(review_id):
     
     email = session['usuario_email']
     
-    # --- A LINHA QUE TINHA SUMIDO: ---
+
     linhas_afetadas = db.deletar_review(review_id, email)
     
     if linhas_afetadas > 0:
@@ -168,9 +163,9 @@ def deletar_avaliacao(review_id):
     else:
         flash("Erro: Você não tem permissão para apagar essa avaliação.")
         
-    # Redireciona de volta para a página anterior (o álbum)
+
     return redirect(request.referrer)
-# --- API ---
+
 @app.route('/api/buscar_album', methods=['POST'])
 def api_buscar_album():
     termo = request.form.get('query')
@@ -183,8 +178,6 @@ def api_buscar_album():
         print(e)
         return jsonify({'erro': 'Erro interno'}), 500
     
-    
-# Tratamento de erro 404 (Página não encontrada)
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('erro.html', mensagem="Página não encontrada. Você se perdeu no ritmo?"), 404

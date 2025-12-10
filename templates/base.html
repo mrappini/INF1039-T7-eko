@@ -11,21 +11,18 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='homepage.css') }}" />
 
     <style>
-        /* VARIÁVEIS DO EKO */
         :root {
             --eko-orange: #FF6E1A;
             --eko-bg: #1F1F23;
             --eko-nav: #0e0e10;
         }
 
-        /* 1. CONFIGURAÇÃO PARA O RODAPÉ FICAR NO CHÃO (STICKY FOOTER) */
         html, body {
             height: 100%;
             margin: 0;
             font-family: 'Prompt', sans-serif;
         }
 
-        /* O corpo vira uma coluna flexível */
         body {
             display: flex;
             flex-direction: column;
@@ -33,7 +30,7 @@
             color: #EDEDED;
         }
 
-        /* 2. CONFIGURAÇÃO DO VÍDEO DE FUNDO */
+        /*CONFIGURAÇÃO DO VÍDEO DE FUNDO */
         #video-background {
             position: fixed;
             right: 0;
@@ -55,7 +52,6 @@
         /* NAVBAR E FOOTER */
         .bg-eko-dark { background-color: var(--eko-nav) !important; }
         
-        /* --- AQUI ESTÁ A MUDANÇA DA LINHA LARANJA --- */
         .border-eko-header { 
             border-bottom: 2px solid var(--eko-orange) !important; 
         }

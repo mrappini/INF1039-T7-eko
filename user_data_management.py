@@ -6,7 +6,6 @@ import secrets
 engine = db.create_engine("sqlite:///login.sqlite")
 metadata = db.MetaData()
 
-# --- DEFINIÇÃO DAS TABELAS ---
 
 Entrada = db.Table('Usuario', metadata,
       db.Column('Email', db.String(255), primary_key=True),
@@ -34,12 +33,11 @@ Avaliacoes = db.Table('Avaliacoes', metadata,
 
 metadata.create_all(engine) 
 
-# --- FUNÇÕES AUXILIARES ---
+
 
 def sha512(inp: str): 
     return hashlib.sha512(inp.encode()).hexdigest()
 
-# --- FUNÇÕES DE USUÁRIO ---
 
 def get_user(email):
     with engine.connect() as conn:
@@ -66,7 +64,6 @@ def new_user(email, usuario, senha):
         conn.commit()
         return result.rowcount
 
-# --- FUNÇÕES DE ÁLBUNS E AVALIAÇÕES ---
 
 def get_album_id_by_spotify(spotify_id):
     """Busca o ID interno (número) usando o ID do Spotify (string)"""
@@ -95,11 +92,9 @@ def criar_album_se_nao_existir(spotify_id, titulo, artista, capa_url):
         return result.inserted_primary_key[0]
 
 def nova_avaliacao(user_email, spotify_id, nome_album, artista_album, capa_album, nota, comentario):
-    # Garante que o álbum existe e pega o ID dele
     album_db_id = criar_album_se_nao_existir(spotify_id, nome_album, artista_album, capa_album)
     
     with engine.connect() as conn:
-        # Antes de inserir, deleta qualquer avaliação anterior deste usuário para este álbum
         print(f"--- [DB] Atualizando review de {user_email} para o álbum {album_db_id} ---")
         apagar_velha = db.delete(Avaliacoes).where(
             (Avaliacoes.c.user_email == user_email) & 
@@ -107,7 +102,6 @@ def nova_avaliacao(user_email, spotify_id, nome_album, artista_album, capa_album
         )
         conn.execute(apagar_velha)
         
-        # Insere a nova
         ins = db.insert(Avaliacoes).values(
             user_email=user_email,
             album_id=album_db_id,
@@ -128,7 +122,6 @@ def ler_avaliacoes_do_album(spotify_id):
         return []
 
     with engine.connect() as conn:
-        # Query com OUTERJOIN para trazer a review mesmo se o usuário tiver sido deletado (segurança)
         query = db.select(Avaliacoes, Entrada.c.Usuario).outerjoin(
             Entrada, Avaliacoes.c.user_email == Entrada.c.Email
         ).where(Avaliacoes.c.album_id == album_id)
@@ -142,7 +135,6 @@ def ler_avaliacoes_do_album(spotify_id):
                 'nota': linha.nota,
                 'comentario': linha.comentario,
                 'Usuario': linha.Usuario if linha.Usuario else "Usuário Desconhecido",
-                # [CORREÇÃO] Adicionada a linha abaixo para permitir que o HTML verifique o dono
                 'user_email': linha.user_email 
             }
             lista_final.append(r_dict)
@@ -160,11 +152,10 @@ def ler_avaliacoes_do_usuario(email_usuario):
 
 def deletar_review(review_id, user_email):
     with engine.connect() as conn:
-        # Só deleta se o ID bater E o email for do dono
         delete_query = db.delete(Avaliacoes).where(
             (Avaliacoes.c.id == review_id) & 
             (Avaliacoes.c.user_email == user_email)
         )
         result = conn.execute(delete_query)
         conn.commit()
-        return result.rowcount # Retorna 1 se deletou, 0 se não achou
+        return result.rowcount 

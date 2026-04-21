@@ -2,10 +2,27 @@ import sqlalchemy as db
 from sqlalchemy import text
 import hashlib
 import secrets
+import os  # Adicionado para ler as variáveis de ambiente
 
-engine = db.create_engine("sqlite:///login.sqlite")
+# --- CONFIGURAÇÃO DO BANCO DE DADOS ---
+
+def get_engine():
+    # Tenta pegar a URL do Neon (Render)
+    database_url = os.getenv("DATABASE_URL")
+    
+    if database_url:
+        # Correção: O Render entrega 'postgres://', mas o SQLAlchemy exige 'postgresql://'
+        if database_url.startswith("postgres://"):
+            database_url = database_url.replace("postgres://", "postgresql://", 1)
+        return db.create_engine(database_url)
+    else:
+        # Se estiver no seu PC, usa o SQLite local
+        return db.create_engine("sqlite:///login.sqlite")
+
+engine = get_engine()
 metadata = db.MetaData()
 
+# --- DEFINIÇÃO DAS TABELAS (Permanece igual) ---
 
 Entrada = db.Table('Usuario', metadata,
       db.Column('Email', db.String(255), primary_key=True),
@@ -31,13 +48,13 @@ Avaliacoes = db.Table('Avaliacoes', metadata,
     db.Column('album_id', db.Integer, db.ForeignKey('Albuns.id'), nullable=False)
 )
 
+# Cria as tabelas se elas não existirem (Funciona no Neon e no SQLite)
 metadata.create_all(engine) 
 
-
+# --- FUNÇÕES DE LÓGICA (Permanecem iguais) ---
 
 def sha512(inp: str): 
     return hashlib.sha512(inp.encode()).hexdigest()
-
 
 def get_user(email):
     with engine.connect() as conn:
@@ -64,9 +81,7 @@ def new_user(email, usuario, senha):
         conn.commit()
         return result.rowcount
 
-
 def get_album_id_by_spotify(spotify_id):
-    """Busca o ID interno (número) usando o ID do Spotify (string)"""
     with engine.connect() as conn:
         query = db.select(Albuns.c.id).where(Albuns.c.spotify_id == spotify_id)
         result = conn.execute(query).fetchone()
@@ -80,7 +95,6 @@ def criar_album_se_nao_existir(spotify_id, titulo, artista, capa_url):
         return existing_id
     
     with engine.connect() as conn:
-        print(f"--- [DB] Criando novo álbum no banco: {titulo} ---")
         ins = db.insert(Albuns).values(
             spotify_id=spotify_id,
             titulo=titulo,
@@ -89,13 +103,13 @@ def criar_album_se_nao_existir(spotify_id, titulo, artista, capa_url):
         )
         result = conn.execute(ins)
         conn.commit()
+        # No Postgres, o inserted_primary_key funciona bem com SERIAL
         return result.inserted_primary_key[0]
 
 def nova_avaliacao(user_email, spotify_id, nome_album, artista_album, capa_album, nota, comentario):
     album_db_id = criar_album_se_nao_existir(spotify_id, nome_album, artista_album, capa_album)
     
     with engine.connect() as conn:
-        print(f"--- [DB] Atualizando review de {user_email} para o álbum {album_db_id} ---")
         apagar_velha = db.delete(Avaliacoes).where(
             (Avaliacoes.c.user_email == user_email) & 
             (Avaliacoes.c.album_id == album_db_id)
@@ -113,17 +127,19 @@ def nova_avaliacao(user_email, spotify_id, nome_album, artista_album, capa_album
         
     return "Avaliação atualizada com sucesso!"
 
-
 def ler_avaliacoes_do_album(spotify_id):
-    print(f"--- [DB] Buscando reviews para Spotify ID: {spotify_id} ---")
-    
     album_id = get_album_id_by_spotify(spotify_id)
     if not album_id:
-        print("--- [DB] Álbum ainda não existe no banco (0 reviews) ---")
         return []
 
     with engine.connect() as conn:
-        query = db.select(Avaliacoes, Entrada.c.Usuario).outerjoin(
+        query = db.select(
+            Avaliacoes.c.id, 
+            Avaliacoes.c.nota, 
+            Avaliacoes.c.comentario, 
+            Avaliacoes.c.user_email,
+            Entrada.c.Usuario
+        ).outerjoin(
             Entrada, Avaliacoes.c.user_email == Entrada.c.Email
         ).where(Avaliacoes.c.album_id == album_id)
         
@@ -139,8 +155,6 @@ def ler_avaliacoes_do_album(spotify_id):
                 'user_email': linha.user_email 
             }
             lista_final.append(r_dict)
-
-        print(f"--- [DB] Retornando {len(lista_final)} reviews para o site ---")
         return lista_final
 
 def ler_avaliacoes_do_usuario(email_usuario):
@@ -159,4 +173,4 @@ def deletar_review(review_id, user_email):
         )
         result = conn.execute(delete_query)
         conn.commit()
-        return result.rowcount 
+        return result.rowcount

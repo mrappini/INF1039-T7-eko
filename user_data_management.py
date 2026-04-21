@@ -113,6 +113,7 @@ def nova_avaliacao(user_email, spotify_id, nome_album, artista_album, capa_album
         
     return "Avaliação atualizada com sucesso!"
 
+
 def ler_avaliacoes_do_album(spotify_id):
     print(f"--- [DB] Buscando reviews para Spotify ID: {spotify_id} ---")
     
